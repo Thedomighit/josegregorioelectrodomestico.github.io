@@ -1,238 +1,396 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>José Gregorio González - Técnico Profesional</title>
-  <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAV21 - El Sonido Puro de la Creatividad</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #111;
-      color: #fff;
-      scroll-behavior: smooth;
-    }
+    <style>
+        /* ------------------- */
+        /* --- ESTILOS CSS --- */
+        /* ------------------- */
+        :root {
+            --color-primario: #00BFFF; /* Deep Sky Blue */
+            --color-primario-oscuro: #009ACD;
+            --color-fondo: #0a0a0a;
+            --color-superficie: #1a1a1a;
+            --color-texto-principal: #f0f0f0;
+            --color-texto-secundario: #a0a0a0;
+            --fuente-principal: 'Poppins', sans-serif;
+            --transicion-rapida: 0.3s ease;
+            --transicion-media: 0.5s cubic-bezier(0.65, 0.05, 0.36, 1);
+        }
 
-    header {
-      background: url('https://img.freepik.com/vector-premium/trabajador-mantenimiento-centro-servicio-electrodomesticos-reparando-personal-mantenimiento-clientes-renovacion-hogar_654623-948.jpg') center center / cover no-repeat;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      animation: fadeIn 2s ease-in-out;
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
-    header::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
+        body {
+            font-family: var(--fuente-principal);
+            background-color: var(--color-fondo);
+            color: var(--color-texto-principal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
 
-    .intro {
-      position: relative;
-      z-index: 2;
-      max-width: 90%;
-      animation: slideDown 2s ease;
-    }
+        /* --- PRELOADER / ANIMACIÓN DE ENTRADA --- */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--color-fondo);
+            display: grid;
+            place-items: center;
+            z-index: 2000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
 
-    .intro h1 {
-      font-size: 2.5rem;
-      color: yellow;
-      margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px #000;
-    }
+        #preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
 
-    .intro p {
-      font-size: 1.2rem;
-      color: #eee;
-      text-shadow: 1px 1px 3px #000;
-    }
+        .preloader-logo {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-texto-principal);
+            overflow: hidden;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
+        .preloader-logo .part1, .preloader-logo .part2 {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100%);
+            animation: revealText 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
 
-    @keyframes slideDown {
-      from { transform: translateY(-40px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+        .preloader-logo .part2 {
+            color: var(--color-primario);
+            animation-delay: 0.2s;
+        }
 
-    section {
-      padding: 3rem 1rem;
-      text-align: center;
-    }
+        @keyframes revealText {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        body.loading {
+            overflow: hidden; /* Evita el scroll mientras el preloader está activo */
+        }
 
-    .profile img {
-      width: 130px;
-      border-radius: 50%;
-      border: 4px solid yellow;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 10px yellow;
-    }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; }
+        h1, h2, h3 { font-weight: 700; margin-bottom: 20px; }
+        h1 { font-size: clamp(3rem, 7vw, 5.5rem); }
+        h2 { font-size: clamp(2rem, 5vw, 3rem); text-align: center; margin-bottom: 50px; }
+        h3 { font-size: 1.6rem; color: var(--color-primario); }
+        p { margin-bottom: 15px; color: var(--color-texto-secundario); }
+        section { padding: 100px 0; }
+        span.highlight { color: var(--color-primario); }
 
-    h2 {
-      font-size: 2rem;
-      color: yellow;
-      margin-bottom: 1rem;
-    }
+        /* --- CABECERA Y NAVEGACIÓN MEJORADA --- */
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 20px 0;
+            background-color: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            transition: all var(--transicion-rapida);
+        }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 2rem; font-weight: 700; color: var(--color-texto-principal); text-decoration: none; }
+        .logo span { color: var(--color-primario); }
 
-    p {
-      max-width: 800px;
-      margin: auto;
-      color: #ccc;
-      font-size: 1rem;
-    }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 35px;
+        }
+        .nav-links a { color: var(--color-texto-principal); text-decoration: none; font-weight: 400; position: relative; padding: 5px 0; transition: color var(--transicion-rapida); }
+        .nav-links a:hover { color: var(--color-primario); }
+        .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 50%; width: 0; height: 2px; background-color: var(--color-primario); transition: all 0.4s ease-out; transform: translateX(-50%); }
+        .nav-links a:hover::after { width: 100%; }
 
-    .whatsapp {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 1rem 2rem;
-      background: yellow;
-      color: black;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: bold;
-      animation: pulse 2s infinite;
-    }
+        /* --- MENÚ HAMBURGUESA ANIMADO --- */
+        .menu-toggle {
+            display: none; /* Oculto en PC */
+            width: 30px; height: 22px;
+            position: relative;
+            cursor: pointer;
+            z-index: 1002;
+        }
+        .menu-toggle span {
+            display: block;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: var(--color-texto-principal);
+            border-radius: 9px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+        .menu-toggle span:nth-child(1) { top: 0px; }
+        .menu-toggle span:nth-child(2) { top: 9px; }
+        .menu-toggle span:nth-child(3) { top: 18px; }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
+        /* Transformación a 'X' */
+        .menu-toggle.active span:nth-child(1) { top: 9px; transform: rotate(135deg); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; left: -30px; }
+        .menu-toggle.active span:nth-child(3) { top: 9px; transform: rotate(-135deg); }
 
-    .services {
-      background-color: #222;
-    }
+        /* --- Sección Hero (igual que antes, ya era muy buena) --- */
+        #hero { height: 100vh; min-height: 700px; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; color: #fff; }
+        .slider-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); animation: kenburns 25s infinite ease-in-out; }
+        .slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop'); }
+        .slide:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop'); animation-delay: -5s; }
+        .slide:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop'); animation-delay: -10s; }
+        .slide.active { opacity: 1; }
+        @keyframes kenburns { 0%, 100% { transform: scale(1.1) translate(0, 0); } 50% { transform: scale(1) translate(3%, -3%); } }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(10, 10, 10, 0.9), rgba(0, 0, 0, 0.3)); }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-content h1, .hero-content p, .hero-content .cta-button { opacity: 0; animation: fadeInUp 1s ease-out forwards; animation-delay: 2.5s; /* Delay para esperar al preloader */ }
+        .hero-content p { animation-delay: 2.8s; }
+        .hero-content .cta-button { animation-delay: 3.1s; }
+        @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .hero-content p { font-size: 1.3rem; max-width: 650px; margin: 0 auto 35px auto; color: #e0e0e0; text-shadow: 1px 1px 8px rgba(0,0,0,0.8); }
+        .cta-button { display: inline-block; background: linear-gradient(90deg, var(--color-primario), var(--color-primario-oscuro)); background-size: 200% 100%; color: #fff; padding: 16px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; border: none; transition: all 0.4s ease; box-shadow: 0 5px 20px rgba(0, 191, 255, 0.2); position: relative; overflow: hidden; }
+        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 191, 255, 0.4); background-position: 100% 0; }
+        .cta-button .fa-play { margin-left: 10px; }
 
-    .services ul {
-      list-style: none;
-      padding: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      max-width: 1000px;
-      margin: auto;
-    }
+        /* --- Estilos de las cards (sin cambios) --- */
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { background: var(--color-superficie); padding: 40px; border-radius: 15px; border-left: 3px solid transparent; transition: all var(--transicion-rapida); }
+        .card:hover { transform: translateY(-10px); border-left-color: var(--color-primario); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .card .icon { font-size: 3rem; color: var(--color-primario); margin-bottom: 20px; }
+        .about-content { display: flex; align-items: center; gap: 60px; }
+        .about-text, .about-image { flex: 1; }
+        .about-image img { max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); }
 
-    .services li {
-      background: #333;
-      padding: 1.5rem;
-      border-left: 5px solid yellow;
-      border-radius: 10px;
-      transition: 0.3s ease;
-    }
+        /* --- Contacto y Footer (sin cambios) --- */
+        #contacto { background-color: var(--color-superficie); }
+        .contact-container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .social-icons { margin-top: 30px; display: flex; justify-content: center; gap: 30px; }
+        .social-icons a { color: var(--color-texto-secundario); font-size: 2.2rem; transition: color 0.3s ease, transform 0.3s ease; }
+        .social-icons a:hover { color: var(--color-primario); transform: scale(1.2) translateY(-3px); }
+        .contact-info { font-size: 1.2rem; margin: 30px 0; background: var(--color-fondo); display: inline-block; padding: 15px 25px; border-radius: 10px; }
+        .contact-info i { color: var(--color-primario); margin-right: 15px; }
+        footer { text-align: center; padding: 40px 20px; background-color: #000; }
 
-    .services li:hover {
-      background: #444;
-      transform: translateY(-5px);
-    }
+        /* --------------------------- */
+        /* --- ESTILOS RESPONSIVOS --- */
+        /* --------------------------- */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            section { padding: 70px 0; }
+            h2 { margin-bottom: 30px; }
+            .menu-toggle { display: block; }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%; /* Inicia fuera de la pantalla */
+                width: 75%;
+                height: 100vh;
+                background-color: var(--color-superficie);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right var(--transicion-media);
+                box-shadow: -10px 0px 30px rgba(0,0,0,0.5);
+                padding: 20px;
+            }
+            .nav-links.nav-active { right: 0; }
+            
+            /* Animación de entrada para los links del menú móvil */
+            .nav-links li {
+                opacity: 0;
+                transform: translateX(50px);
+                transition: opacity 0.5s ease, transform 0.5s ease;
+            }
+            .nav-links.nav-active li { opacity: 1; transform: translateX(0); }
+            /* Delay escalonado para cada link */
+            .nav-links.nav-active li:nth-child(1) { transition-delay: 0.2s; }
+            .nav-links.nav-active li:nth-child(2) { transition-delay: 0.3s; }
+            .nav-links.nav-active li:nth-child(3) { transition-delay: 0.4s; }
+            .nav-links.nav-active li:nth-child(4) { transition-delay: 0.5s; }
 
-    .contact {
-      background: #1a1a1a;
-    }
-
-    .contact p {
-      margin-bottom: 1rem;
-    }
-
-    footer {
-      background: #000;
-      padding: 2rem 1rem;
-      font-size: 0.9rem;
-      color: #bbb;
-    }
-
-    .whatsapp-float {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #25d366;
-      color: white;
-      padding: 15px;
-      border-radius: 50%;
-      font-size: 25px;
-      z-index: 999;
-      box-shadow: 0 0 10px #25d366;
-      transition: 0.3s ease;
-      text-align: center;
-    }
-
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-    }
-
-    @media (max-width: 768px) {
-      header {
-        height: 80vh;
-      }
-
-      .intro h1 {
-        font-size: 2rem;
-      }
-
-      .intro p {
-        font-size: 1rem;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      p {
-        font-size: 0.95rem;
-      }
-    }
-  </style>
+            .about-content { flex-direction: column; text-align: center; }
+            .about-text { order: 2; }
+            .about-image { order: 1; margin-bottom: 40px; }
+        }
+    </style>
 </head>
-<body>
+<body class="loading">
 
-  <header>
-    <div class="intro">
-      <h1>José Gregorio González</h1>
-      <p>Técnico de confianza para tus electrodomésticos</p>
+    <!-- =========== PRELOADER ============ -->
+    <div id="preloader">
+        <h1 class="preloader-logo">
+            <span class="part1">WAV</span><span class="part2">21</span>
+        </h1>
     </div>
-  </header>
 
-  <section class="profile">
-    <img src="https://scontent.fbog19-1.fna.fbcdn.net/v/t39.30808-6/487320509_122190883430051516_6028029575414964275_n.jpg?stp=c0.5000x0.3300f_dst-webp_e15_p1080x1350_q70_tt1_u&efg=eyJ1cmxnZW4iOiJ1cmxnZW5fZnJvbV91cmwifQ&_nc_cid=0&_nc_ad=z-m&_nc_rml=0&_nc_ht=scontent.fbog19-1.fna&_nc_cat=103&_nc_ohc=xoJsufkASxYQ7kNvwG8Dpb7&_nc_gid=kVW0iQqF6DkK8bCwNfwu5A&ccb=1-7&_nc_sid=833d8c&oh=00_AfF2it4lv9dKOnhfRRyPGJeo_TYNOdupcz-vYrT2TD6_qw&oe=67F86457" alt="José Gregorio">
-    <h2>¿Quién soy?</h2>
-    <p>Soy un técnico especializado en reparación de electrodomésticos: neveras, lavadoras, microondas, televisores, aires acondicionados y más. Ofrezco soluciones rápidas, efectivas y con garantía. Atención personalizada y experiencia comprobada en todo Barranquilla.</p>
-    <a class="whatsapp" href="https://wa.me/573212949163" target="_blank">💬 Escríbeme por WhatsApp</a>
-  </section>
+    <!-- =========== CABECERA ============ -->
+    <header>
+        <div class="container">
+            <a href="#hero" class="logo">WAV<span class="highlight">21</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#sobre-nosotros">Nosotros</a></li>
+                    <li><a href="#porque-wav">¿Por qué WAV?</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+                <div class="menu-toggle" aria-label="Abrir menú">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-  <section class="services">
-    <h2>Servicios que ofrezco</h2>
-    <ul>
-      <li>🧊 Reparación de neveras y congeladores</li>
-      <li>🌀 Arreglo de lavadoras automáticas y semi</li>
-      <li>🔥 Microondas y hornos eléctricos</li>
-      <li>❄️ Aires acondicionados (instalación y reparación)</li>
-      <li>🔧 Diagnóstico y mantenimiento preventivo</li>
-      <li>🛠️ Cambio de repuestos originales</li>
-    </ul>
-  </section>
+    <main>
+        <!-- SECCIÓN HERO -->
+        <section id="hero">
+            <div class="slider-container">
+                <div class="slide active"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content container">
+                <h1>WAV<span class="highlight">21</span><br>Sonido sin Compromisos</h1>
+                <p>Creamos experiencias auditivas en la máxima pureza. Calidad de estudio sin compresión para tus proyectos más ambiciosos.</p>
+                <a href="#contacto" class="cta-button">
+                    Inicia tu Proyecto <i class="fas fa-play"></i>
+                </a>
+            </div>
+        </section>
 
-  <section class="contact">
-    <h2>Contáctame</h2>
-    <p>📍 Ubicación: Bogotá, Colombia</p>
-    <p>📞 Teléfono y WhatsApp: <strong>+57 321 2949163</strong></p>
-    <p>🕒 Atención: Lunes a Sábado - 8:00am a 6:00pm</p>
-    <a class="whatsapp" href="https://wa.me/573212949163" target="_blank">💬 Solicitar servicio</a>
-  </section>
+        <!-- SECCIÓN SOBRE NOSOTROS -->
+        <section id="sobre-nosotros">
+            <div class="container">
+                <h2 data-aos="fade-up">Somos <span class="highlight">Artesanos</span> del Audio</h2>
+                <div class="about-content">
+                    <div class="about-text" data-aos="fade-right" data-aos-delay="200">
+                        <h3>Nuestra Misión: Preservar la Esencia del Sonido</h3>
+                        <p>WAV21 nació de la obsesión por la fidelidad sónica. En una era digital de formatos comprimidos, defendemos el alma de la grabación original. Somos un colectivo de productores y músicos dedicados a entregar audio tal como fue concebido en el estudio: puro, rico y sin pérdidas.</p>
+                        <p>Cada pista que creamos es una pieza de arte, masterizada para garantizar que cada matiz, dinámica y textura llegue a tus oídos intacta. Por eso, el formato WAV no es una opción, es nuestro estándar.</p>
+                    </div>
+                    <div class="about-image" data-aos="fade-left" data-aos-delay="200">
+                        <img src="https://images.unsplash.com/photo-1616356610237-fd5e89a59b67?q=80&w=1964&auto=format&fit=crop" alt="Estudio de grabación WAV21">
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <footer>
-    &copy; 2025 José Gregorio González - Todos los derechos reservados
-  </footer>
+        <!-- SECCIÓN ¿POR QUÉ WAV? -->
+        <section id="porque-wav" style="background-color: var(--color-superficie);">
+            <div class="container">
+                <h2 data-aos="fade-up">La Ventaja de la Calidad <span class="highlight">Absoluta</span></h2>
+                <div class="grid-layout">
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-wave-square"></i></div><h3>Máxima Fidelidad</h3><p>WAV es audio sin comprimir. Escuchas el 100% de la data sonora, capturando la profundidad, calidez y el rango dinámico completo del performance original.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-medal"></i></div><h3>Estándar Profesional</h3><p>El formato de facto para masterización y producción en la industria. Perfecto para cine, broadcast y cualquier aplicación donde la calidad es innegociable.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-drafting-compass"></i></div><h3>Precisión para Edición</h3><p>La integridad de un archivo WAV te da una flexibilidad inigualable para edición, mezcla y post-producción, sin degradar la calidad con cada cambio.</p></div>
+                </div>
+            </div>
+        </section>
 
-  <a class="whatsapp-float" href="https://wa.me/573212949163" target="_blank">💬</a>
+        <!-- SECCIÓN SERVICIOS -->
+        <section id="servicios">
+            <div class="container">
+                <h2 data-aos="fade-up">Soluciones Sonoras a tu <span class="highlight">Medida</span></h2>
+                <div class="grid-layout">
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-music"></i></div><h3>Librería de Pistas Premium</h3><p>Adquiere licencias de nuestra creciente librería de música original en formato WAV, curada para todo tipo de proyectos audiovisuales y creativos.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-file-signature"></i></div><h3>Alianzas y Contratos</h3><p>Trabajamos bajo convenios con creadores y marcas. Ofrecemos modelos flexibles, incluyendo licencias gratuitas a cambio de colaboración y crédito.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-microphone-alt"></i></div><h3>Producción Personalizada</h3><p>¿Necesitas una identidad sonora única? Nuestro equipo de productores creará la banda sonora, jingle o efecto de sonido perfecto para tu visión.</p></div>
+                </div>
+            </div>
+        </section>
 
+        <!-- SECCIÓN CONTACTO -->
+        <section id="contacto">
+            <div class="container">
+                <div class="contact-container" data-aos="zoom-in">
+                    <h2>Demos <span class="highlight">Play</span> a tu Próxima Idea</h2>
+                    <p>Estamos listos para colaborar. La comunicación más directa y rápida es a través de Telegram o encuéntranos en Facebook.</p>
+                    <div class="contact-info"><p><i class="fab fa-telegram"></i> Hablemos en Telegram: <strong>+57 300 855 6516</strong></p></div>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1H4G69Dq1f/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+    /* -------------------------- */
+    /* --- CÓDIGO JAVASCRIPT --- */
+    /* -------------------------- */
+    
+    // Esperar a que toda la página (imágenes, etc.) esté cargada
+    window.addEventListener('load', () => {
+        const preloader = document.getElementById('preloader');
+        
+        // Espera un poco más después de la animación del logo para que se aprecie
+        setTimeout(() => {
+            preloader.classList.add('loaded');
+            document.body.classList.remove('loading');
+        }, 2000); // 2000ms = 2 segundos
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        AOS.init({ duration: 800, once: true, offset: 50 });
+
+        // --- Slider (sin cambios) ---
+        const slides = document.querySelectorAll('.slide');
+        if(slides.length > 0) {
+            let currentSlide = 0;
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 5000);
+        }
+
+        // --- Menú responsivo con nueva animación ---
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        const navLinksItems = document.querySelectorAll('.nav-links li a');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('nav-active');
+        });
+
+        // Cierra el menú al hacer clic en un enlace
+        navLinksItems.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('nav-active')) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('nav-active');
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
