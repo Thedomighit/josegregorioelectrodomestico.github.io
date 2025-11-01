@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- ===== LA LÍNEA MODIFICADA ESTÁ AQUÍ ===== -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>WAV21 - El Sonido Puro de la Creatividad</title>
@@ -30,63 +29,32 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        
+        /* ===== LA LÍNEA MÁGICA ESTÁ AQUÍ ===== */
+        /* Esto crea un contenedor raíz rígido y previene cualquier desbordamiento horizontal */
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden; 
+        }
 
         body {
             font-family: var(--fuente-principal);
             background-color: var(--color-fondo);
             color: var(--color-texto-principal);
             line-height: 1.7;
-            overflow-x: hidden; /* Esto previene el scroll horizontal */
+            overflow-x: hidden; /* Doble seguro, buena práctica */
         }
 
         /* --- PRELOADER / ANIMACIÓN DE ENTRADA --- */
-        #preloader {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: var(--color-fondo);
-            display: grid;
-            place-items: center;
-            z-index: 2000;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--color-fondo); display: grid; place-items: center; z-index: 2000; transition: opacity 0.8s ease, visibility 0.8s ease; }
+        #preloader.loaded { opacity: 0; visibility: hidden; }
+        .preloader-logo { font-size: 3rem; font-weight: 700; color: var(--color-texto-principal); overflow: hidden; }
+        .preloader-logo .part1, .preloader-logo .part2 { display: inline-block; opacity: 0; transform: translateY(100%); animation: revealText 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+        .preloader-logo .part2 { color: var(--color-primario); animation-delay: 0.2s; }
+        @keyframes revealText { to { opacity: 1; transform: translateY(0); } }
+        body.loading { overflow: hidden; }
 
-        #preloader.loaded {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .preloader-logo {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--color-texto-principal);
-            overflow: hidden;
-        }
-
-        .preloader-logo .part1, .preloader-logo .part2 {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(100%);
-            animation: revealText 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-        }
-
-        .preloader-logo .part2 {
-            color: var(--color-primario);
-            animation-delay: 0.2s;
-        }
-
-        @keyframes revealText {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        body.loading {
-            overflow: hidden; /* Evita el scroll mientras el preloader está activo */
-        }
-
+        /* --- ESTILOS GENERALES (SIN CAMBIOS) --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; }
         h1, h2, h3 { font-weight: 700; margin-bottom: 20px; }
         h1 { font-size: clamp(3rem, 7vw, 5.5rem); }
@@ -96,60 +64,28 @@
         section { padding: 100px 0; }
         span.highlight { color: var(--color-primario); }
 
-        /* --- CABECERA Y NAVEGACIÓN MEJORADA --- */
-        header {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            padding: 20px 0;
-            background-color: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            transition: all var(--transicion-rapida);
-        }
+        /* --- CABECERA Y NAVEGACIÓN --- */
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0; background-color: rgba(10, 10, 10, 0.7); backdrop-filter: blur(12px); z-index: 1000; transition: all var(--transicion-rapida); }
         header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 2rem; font-weight: 700; color: var(--color-texto-principal); text-decoration: none; }
         .logo span { color: var(--color-primario); }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 35px;
-        }
+        .nav-links { list-style: none; display: flex; gap: 35px; }
         .nav-links a { color: var(--color-texto-principal); text-decoration: none; font-weight: 400; position: relative; padding: 5px 0; transition: color var(--transicion-rapida); }
         .nav-links a:hover { color: var(--color-primario); }
         .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 50%; width: 0; height: 2px; background-color: var(--color-primario); transition: all 0.4s ease-out; transform: translateX(-50%); }
         .nav-links a:hover::after { width: 100%; }
-
-        /* --- MENÚ HAMBURGUESA ANIMADO --- */
-        .menu-toggle {
-            display: none; /* Oculto en PC */
-            width: 30px; height: 22px;
-            position: relative;
-            cursor: pointer;
-            z-index: 1002;
-        }
-        .menu-toggle span {
-            display: block;
-            position: absolute;
-            height: 3px;
-            width: 100%;
-            background: var(--color-texto-principal);
-            border-radius: 9px;
-            opacity: 1;
-            left: 0;
-            transform: rotate(0deg);
-            transition: .25s ease-in-out;
-        }
+        
+        /* --- MENÚ HAMBURGUESA --- */
+        .menu-toggle { display: none; width: 30px; height: 22px; position: relative; cursor: pointer; z-index: 1002; }
+        .menu-toggle span { display: block; position: absolute; height: 3px; width: 100%; background: var(--color-texto-principal); border-radius: 9px; opacity: 1; left: 0; transform: rotate(0deg); transition: .25s ease-in-out; }
         .menu-toggle span:nth-child(1) { top: 0px; }
         .menu-toggle span:nth-child(2) { top: 9px; }
         .menu-toggle span:nth-child(3) { top: 18px; }
-
-        /* Transformación a 'X' */
         .menu-toggle.active span:nth-child(1) { top: 9px; transform: rotate(135deg); }
         .menu-toggle.active span:nth-child(2) { opacity: 0; left: -30px; }
         .menu-toggle.active span:nth-child(3) { top: 9px; transform: rotate(-135deg); }
 
-        /* --- Sección Hero --- */
+        /* --- SECCIÓN HERO --- */
         #hero { height: 100vh; min-height: 700px; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; color: #fff; }
         .slider-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); animation: kenburns 25s infinite ease-in-out; }
@@ -187,38 +123,20 @@
         .contact-info i { color: var(--color-primario); margin-right: 15px; }
         footer { text-align: center; padding: 40px 20px; background-color: #000; }
 
-        /* --------------------------- */
         /* --- ESTILOS RESPONSIVOS --- */
-        /* --------------------------- */
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
             section { padding: 70px 0; }
             h2 { margin-bottom: 30px; }
             .menu-toggle { display: block; }
-            
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 75%;
-                height: 100vh;
-                background-color: var(--color-superficie);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: right var(--transicion-media);
-                box-shadow: -10px 0px 30px rgba(0,0,0,0.5);
-                padding: 20px;
-            }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; background-color: var(--color-superficie); flex-direction: column; justify-content: center; align-items: center; transition: right var(--transicion-media); box-shadow: -10px 0px 30px rgba(0,0,0,0.5); padding: 20px; }
             .nav-links.nav-active { right: 0; }
-            
             .nav-links li { opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease, transform 0.5s ease; }
             .nav-links.nav-active li { opacity: 1; transform: translateX(0); }
             .nav-links.nav-active li:nth-child(1) { transition-delay: 0.2s; }
             .nav-links.nav-active li:nth-child(2) { transition-delay: 0.3s; }
             .nav-links.nav-active li:nth-child(3) { transition-delay: 0.4s; }
             .nav-links.nav-active li:nth-child(4) { transition-delay: 0.5s; }
-
             .about-content { flex-direction: column; text-align: center; }
             .about-text { order: 2; }
             .about-image { order: 1; margin-bottom: 40px; }
@@ -227,14 +145,8 @@
 </head>
 <body class="loading">
 
-    <!-- =========== PRELOADER ============ -->
-    <div id="preloader">
-        <h1 class="preloader-logo">
-            <span class="part1">WAV</span><span class="part2">21</span>
-        </h1>
-    </div>
+    <div id="preloader"><h1 class="preloader-logo"><span class="part1">WAV</span><span class="part2">21</span></h1></div>
 
-    <!-- =========== CABECERA ============ -->
     <header>
         <div class="container">
             <a href="#hero" class="logo">WAV<span class="highlight">21</span></a>
@@ -245,17 +157,12 @@
                     <li><a href="#servicios">Servicios</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
-                <div class="menu-toggle" aria-label="Abrir menú">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+                <div class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></div>
             </nav>
         </div>
     </header>
 
     <main>
-        <!-- SECCIÓN HERO -->
         <section id="hero">
             <div class="slider-container">
                 <div class="slide active"></div>
@@ -266,22 +173,17 @@
             <div class="hero-content container">
                 <h1>WAV<span class="highlight">21</span><br>Sonido sin Compromisos</h1>
                 <p>Creamos experiencias auditivas en la máxima pureza. Calidad de estudio sin compresión para tus proyectos más ambiciosos.</p>
-                <a href="#contacto" class="cta-button">
-                    Inicia tu Proyecto <i class="fas fa-play"></i>
-                </a>
+                <a href="#contacto" class="cta-button">Inicia tu Proyecto <i class="fas fa-play"></i></a>
             </div>
         </section>
 
-        <!-- (El resto del contenido HTML no necesita cambios, por lo que lo he omitido para brevedad. Debes usar el del código anterior) -->
-         <!-- SECCIÓN SOBRE NOSOTROS -->
-         <section id="sobre-nosotros">
+        <section id="sobre-nosotros">
             <div class="container">
                 <h2 data-aos="fade-up">Somos <span class="highlight">Artesanos</span> del Audio</h2>
                 <div class="about-content">
                     <div class="about-text" data-aos="fade-right" data-aos-delay="200">
                         <h3>Nuestra Misión: Preservar la Esencia del Sonido</h3>
                         <p>WAV21 nació de la obsesión por la fidelidad sónica. En una era digital de formatos comprimidos, defendemos el alma de la grabación original. Somos un colectivo de productores y músicos dedicados a entregar audio tal como fue concebido en el estudio: puro, rico y sin pérdidas.</p>
-                        <p>Cada pista que creamos es una pieza de arte, masterizada para garantizar que cada matiz, dinámica y textura llegue a tus oídos intacta. Por eso, el formato WAV no es una opción, es nuestro estándar.</p>
                     </div>
                     <div class="about-image" data-aos="fade-left" data-aos-delay="200">
                         <img src="https://images.unsplash.com/photo-1616356610237-fd5e89a59b67?q=80&w=1964&auto=format&fit=crop" alt="Estudio de grabación WAV21">
@@ -290,31 +192,28 @@
             </div>
         </section>
 
-        <!-- SECCIÓN ¿POR QUÉ WAV? -->
         <section id="porque-wav" style="background-color: var(--color-superficie);">
             <div class="container">
                 <h2 data-aos="fade-up">La Ventaja de la Calidad <span class="highlight">Absoluta</span></h2>
                 <div class="grid-layout">
-                    <div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-wave-square"></i></div><h3>Máxima Fidelidad</h3><p>WAV es audio sin comprimir. Escuchas el 100% de la data sonora, capturando la profundidad, calidez y el rango dinámico completo del performance original.</p></div>
-                    <div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-medal"></i></div><h3>Estándar Profesional</h3><p>El formato de facto para masterización y producción en la industria. Perfecto para cine, broadcast y cualquier aplicación donde la calidad es innegociable.</p></div>
-                    <div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-drafting-compass"></i></div><h3>Precisión para Edición</h3><p>La integridad de un archivo WAV te da una flexibilidad inigualable para edición, mezcla y post-producción, sin degradar la calidad con cada cambio.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-wave-square"></i></div><h3>Máxima Fidelidad</h3><p>WAV es audio sin comprimir. Escuchas el 100% de la data sonora, capturando la profundidad y el rango dinámico completo del performance original.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-medal"></i></div><h3>Estándar Profesional</h3><p>El formato de facto para masterización y producción en la industria. Perfecto para cine, broadcast y donde la calidad es innegociable.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-drafting-compass"></i></div><h3>Precisión para Edición</h3><p>La integridad de un archivo WAV te da una flexibilidad inigualable para edición y mezcla, sin degradar la calidad con cada cambio.</p></div>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN SERVICIOS -->
         <section id="servicios">
             <div class="container">
                 <h2 data-aos="fade-up">Soluciones Sonoras a tu <span class="highlight">Medida</span></h2>
                 <div class="grid-layout">
                     <div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-music"></i></div><h3>Librería de Pistas Premium</h3><p>Adquiere licencias de nuestra creciente librería de música original en formato WAV, curada para todo tipo de proyectos audiovisuales y creativos.</p></div>
-                    <div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-file-signature"></i></div><h3>Alianzas y Contratos</h3><p>Trabajamos bajo convenios con creadores y marcas. Ofrecemos modelos flexibles, incluyendo licencias gratuitas a cambio de colaboración y crédito.</p></div>
-                    <div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-microphone-alt"></i></div><h3>Producción Personalizada</h3><p>¿Necesitas una identidad sonora única? Nuestro equipo de productores creará la banda sonora, jingle o efecto de sonido perfecto para tu visión.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-file-signature"></i></div><h3>Alianzas y Contratos</h3><p>Trabajamos bajo convenios con creadores y marcas. Ofrecemos modelos flexibles, incluyendo licencias gratuitas a cambio de colaboración.</p></div>
+                    <div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-microphone-alt"></i></div><h3>Producción Personalizada</h3><p>¿Necesitas una identidad sonora única? Nuestro equipo creará la banda sonora, jingle o efecto de sonido perfecto para tu visión.</p></div>
                 </div>
             </div>
         </section>
 
-        <!-- SECCIÓN CONTACTO -->
         <section id="contacto">
             <div class="container">
                 <div class="contact-container" data-aos="zoom-in">
@@ -327,60 +226,29 @@
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- PIE DE PÁGINA -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p>
-        </div>
-    </footer>
+    <footer><div class="container"><p>&copy; 2024 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p></div></footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-    /* -------------------------- */
-    /* --- CÓDIGO JAVASCRIPT --- */
-    /* -------------------------- */
-    
     window.addEventListener('load', () => {
         const preloader = document.getElementById('preloader');
-        setTimeout(() => {
-            preloader.classList.add('loaded');
-            document.body.classList.remove('loading');
-        }, 2000); 
+        setTimeout(() => { preloader.classList.add('loaded'); document.body.classList.remove('loading'); }, 2000); 
     });
 
     document.addEventListener('DOMContentLoaded', () => {
         AOS.init({ duration: 800, once: true, offset: 50 });
-
         const slides = document.querySelectorAll('.slide');
         if(slides.length > 0) {
             let currentSlide = 0;
-            setInterval(() => {
-                slides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].classList.add('active');
-            }, 5000);
+            setInterval(() => { slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }, 5000);
         }
-
         const menuToggle = document.querySelector('.menu-toggle');
         const navLinks = document.querySelector('.nav-links');
         const navLinksItems = document.querySelectorAll('.nav-links li a');
-
-        menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navLinks.classList.toggle('nav-active');
-        });
-
-        navLinksItems.forEach(link => {
-            link.addEventListener('click', () => {
-                if (navLinks.classList.contains('nav-active')) {
-                    menuToggle.classList.remove('active');
-                    navLinks.classList.remove('nav-active');
-                }
-            });
-        });
+        menuToggle.addEventListener('click', () => { menuToggle.classList.toggle('active'); navLinks.classList.toggle('nav-active'); });
+        navLinksItems.forEach(link => { link.addEventListener('click', () => { if (navLinks.classList.contains('nav-active')) { menuToggle.classList.remove('active'); navLinks.classList.remove('nav-active'); } }); });
     });
     </script>
 </body>
