@@ -31,14 +31,22 @@
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; }
         h1, h2, h3 { font-weight: 700; margin-bottom: 20px; }
-        h1 { font-size: clamp(3rem, 7vw, 5.5rem); }
-        h2 { font-size: clamp(2rem, 5vw, 3rem); text-align: center; margin-bottom: 50px; }
-        h3 { font-size: 1.6rem; color: var(--color-primario); }
+        h1 { font-size: clamp(3rem, 7vw, 5.5rem); } h2 { font-size: clamp(2rem, 5vw, 3rem); text-align: center; margin-bottom: 50px; } h3 { font-size: 1.6rem; color: var(--color-primario); }
         p { margin-bottom: 15px; color: var(--color-texto-secundario); }
-        section { padding: 100px 0; }
-        span.highlight { color: var(--color-primario); }
+        section { padding: 100px 0; } span.highlight { color: var(--color-primario); }
 
-        header { position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0; background-color: rgba(10, 10, 10, 0.7); backdrop-filter: blur(12px); z-index: 1000; transition: all var(--transicion-rapida); }
+        /* ===== CSS PARA NAVBAR INTELIGENTE ===== */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0; background-color: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(12px); z-index: 1000;
+            /* Esta es la clave para la animación de entrada/salida */
+            transition: transform 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
+        }
+        /* Esta clase la añadiremos con JS para ocultar el header */
+        header.header-hidden {
+            transform: translateY(-100%);
+        }
+
         header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 2rem; font-weight: 700; color: var(--color-texto-principal); text-decoration: none; }
         .logo span { color: var(--color-primario); }
@@ -74,53 +82,31 @@
         .secondary-link { display: block; margin-top: 20px; color: var(--color-texto-secundario); }
         .secondary-link a { color: var(--color-texto-principal); text-decoration: underline; text-underline-offset: 4px; transition: color var(--transicion-rapida); }
         .secondary-link a:hover { color: var(--color-primario); }
-
         .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card { background: var(--color-superficie); padding: 40px; border-radius: 15px; border-left: 3px solid transparent; transition: all var(--transicion-rapida); }
         .card:hover { transform: translateY(-10px); border-left-color: var(--color-primario); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .card .icon { font-size: 3rem; color: var(--color-primario); margin-bottom: 20px; }
-        .about-content { display: flex; align-items: center; gap: 60px; }
-        .about-text, .about-image { flex: 1; }
+        .about-content { display: flex; align-items: center; gap: 60px; } .about-text, .about-image { flex: 1; }
         .about-image img { max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); }
-
         #colabora { background: linear-gradient(135deg, var(--color-primario-oscuro), var(--color-primario)); color: white; }
-        #colabora h2, #colabora h2 .highlight { color: white; }
-        #colabora p { color: rgba(255, 255, 255, 0.85); max-width: 800px; margin-left: auto; margin-right: auto; }
-        .colabora-content { text-align: center; }
-        .cta-button.white { background: white; color: var(--color-primario-oscuro); box-shadow: none; }
+        #colabora h2, #colabora h2 .highlight { color: white; } #colabora p { color: rgba(255, 255, 255, 0.85); max-width: 800px; margin-left: auto; margin-right: auto; }
+        .colabora-content { text-align: center; } .cta-button.white { background: white; color: var(--color-primario-oscuro); box-shadow: none; }
         .cta-button.white:hover { background: var(--color-texto-principal); color: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        
-        #contacto { background-color: var(--color-superficie); }
-        .contact-container { max-width: 800px; margin: 0 auto; text-align: center; }
-        .social-icons { margin-top: 30px; display: flex; justify-content: center; gap: 30px; }
-        .social-icons a { color: var(--color-texto-secundario); font-size: 2.2rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .social-icons a:hover { color: var(--color-primario); transform: scale(1.2) translateY(-3px); }
-        .contact-info { font-size: 1.2rem; margin: 30px 0; background: var(--color-fondo); display: inline-block; padding: 15px 25px; border-radius: 10px; }
-        .contact-info i { color: var(--color-primario); margin-right: 15px; }
-        footer { text-align: center; padding: 40px 20px; background-color: #000; }
+        #contacto { background-color: var(--color-superficie); } .contact-container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .social-icons { margin-top: 30px; display: flex; justify-content: center; gap: 30px; } .social-icons a { color: var(--color-texto-secundario); font-size: 2.2rem; transition: color 0.3s ease, transform 0.3s ease; }
+        .social-icons a:hover { color: var(--color-primario); transform: scale(1.2) translateY(-3px); } .contact-info { font-size: 1.2rem; margin: 30px 0; background: var(--color-fondo); display: inline-block; padding: 15px 25px; border-radius: 10px; }
+        .contact-info i { color: var(--color-primario); margin-right: 15px; } footer { text-align: center; padding: 40px 20px; background-color: #000; }
 
         @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            section { padding: 70px 0; }
-            h2 { margin-bottom: 30px; }
-            .menu-toggle { display: block; }
-            .nav-links { position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; background-color: var(--color-superficie); flex-direction: column; justify-content: center; align-items: center; transition: right var(--transicion-media); box-shadow: -10px 0px 30px rgba(0,0,0,0.5); padding: 20px; }
+            .container { padding: 0 20px; } section { padding: 70px 0; } h2 { margin-bottom: 30px; }
+            .menu-toggle { display: block; } .nav-links { position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; background-color: var(--color-superficie); flex-direction: column; justify-content: center; align-items: center; transition: right var(--transicion-media); box-shadow: -10px 0px 30px rgba(0,0,0,0.5); padding: 20px; }
             .nav-links.nav-active { right: 0; }
             .nav-links li { opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease, transform 0.5s ease; }
-            .nav-links.nav-active li { opacity: 1; transform: translateX(0); }
-            .nav-links.nav-active li:nth-child(1) { transition-delay: 0.2s; }
-            .nav-links.nav-active li:nth-child(2) { transition-delay: 0.3s; }
-            .nav-links.nav-active li:nth-child(3) { transition-delay: 0.4s; }
-            .nav-links.nav-active li:nth-child(4) { transition-delay: 0.5s; }
-            .nav-links.nav-active li:nth-child(5) { transition-delay: 0.6s; }
-            .about-content { flex-direction: column; text-align: center; }
-            .about-text { order: 2; } .about-image { order: 1; margin-bottom: 40px; }
-
-            /* ===== AJUSTES DE PRECISIÓN PARA PORTADA MÓVIL ===== */
-            #hero { padding-top: 60px; /* Evita que el contenido toque la cabecera */ }
-            .hero-content h1 { font-size: clamp(2.5rem, 10vw, 3rem); line-height: 1.25; /* Espacio entre líneas más ajustado */ }
-            .hero-content p { font-size: 1rem; margin: 15px auto 25px auto; /* Márgenes reducidos */ }
-            .cta-button { padding: 14px 28px; min-width: 200px; /* Tamaño consistente */ }
+            .nav-links.nav-active li { opacity: 1; transform: translateX(0); } .nav-links.nav-active li:nth-child(1) { transition-delay: 0.2s; } .nav-links.nav-active li:nth-child(2) { transition-delay: 0.3s; } .nav-links.nav-active li:nth-child(3) { transition-delay: 0.4s; }
+            .nav-links.nav-active li:nth-child(4) { transition-delay: 0.5s; } .nav-links.nav-active li:nth-child(5) { transition-delay: 0.6s; }
+            .about-content { flex-direction: column; text-align: center; } .about-text { order: 2; } .about-image { order: 1; margin-bottom: 40px; }
+            #hero { padding-top: 60px; } .hero-content h1 { font-size: clamp(2.5rem, 10vw, 3rem); line-height: 1.25; } .hero-content p { font-size: 1rem; margin: 15px auto 25px auto; }
+            .cta-button { padding: 14px 28px; min-width: 200px; }
         }
     </style>
 </head>
@@ -143,19 +129,7 @@
     </header>
 
     <main>
-        <section id="hero">
-            <div class="slider-container"><div class="slide active"></div><div class="slide"></div><div class="slide"></div></div>
-            <div class="hero-overlay"></div>
-            <div class="hero-content container">
-                <!-- Se eliminó el <br> para un ajuste natural -->
-                <h1>WAV<span class="highlight">21</span> Sonido sin Compromisos</h1>
-                <p>Creamos experiencias auditivas en la máxima pureza. Calidad de estudio sin compresión para tus proyectos más ambiciosos.</p>
-                <a href="#contacto" class="cta-button">Inicia tu Proyecto <i class="fas fa-play"></i></a>
-                <p class="secondary-link">¿Eres Artista? <a href="#colabora">Descubre cómo colaborar.</a></p>
-            </div>
-        </section>
-
-        <!-- El resto del HTML no ha cambiado... -->
+        <section id="hero"><div class="slider-container"><div class="slide active"></div><div class="slide"></div><div class="slide"></div></div><div class="hero-overlay"></div><div class="hero-content container"><h1>WAV<span class="highlight">21</span> Sonido sin Compromisos</h1><p>Creamos experiencias auditivas en la máxima pureza. Calidad de estudio sin compresión para tus proyectos más ambiciosos.</p><a href="#contacto" class="cta-button">Inicia tu Proyecto <i class="fas fa-play"></i></a><p class="secondary-link">¿Eres Artista? <a href="#colabora">Descubre cómo colaborar.</a></p></div></section>
         <section id="sobre-nosotros"><div class="container"><h2 data-aos="fade-up">Somos <span class="highlight">Artesanos</span> del Audio</h2><div class="about-content"><div class="about-text" data-aos="fade-right" data-aos-delay="200"><h3>Nuestra Misión: Preservar la Esencia del Sonido</h3><p>WAV21 nació de la obsesión por la fidelidad sónica. En una era digital de formatos comprimidos, defendemos el alma de la grabación original. Somos un colectivo de productores y músicos dedicados a entregar audio tal como fue concebido en el estudio: puro, rico y sin pérdidas.</p></div><div class="about-image" data-aos="fade-left" data-aos-delay="200"><img src="https://images.unsplash.com/photo-1616356610237-fd5e89a59b67?q=80&w=1964&auto=format&fit=crop" alt="Estudio de grabación WAV21"></div></div></div></section>
         <section id="porque-wav" style="background-color: var(--color-superficie);"><div class="container"><h2 data-aos="fade-up">La Ventaja de la Calidad <span class="highlight">Absoluta</span></h2><div class="grid-layout"><div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-wave-square"></i></div><h3>Máxima Fidelidad</h3><p>WAV es audio sin comprimir. Escuchas el 100% de la data sonora, capturando la profundidad y el rango dinámico completo del performance original.</p></div><div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-medal"></i></div><h3>Estándar Profesional</h3><p>El formato de facto para masterización y producción en la industria. Perfecto para cine, broadcast y donde la calidad es innegociable.</p></div><div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-drafting-compass"></i></div><h3>Precisión para Edición</h3><p>La integridad de un archivo WAV te da una flexibilidad inigualable para edición y mezcla, sin degradar la calidad con cada cambio.</p></div></div></div></section>
         <section id="servicios"><div class="container"><h2 data-aos="fade-up">Soluciones Sonoras a tu <span class="highlight">Medida</span></h2><div class="grid-layout"><div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-music"></i></div><h3>Librería de Pistas Premium</h3><p>Adquiere licencias de nuestra creciente librería de música original en formato WAV, curada para todo tipo de proyectos audiovisuales y creativos.</p></div><div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-file-signature"></i></div><h3>Alianzas y Contratos</h3><p>Trabajamos bajo convenios con creadores y marcas. Ofrecemos modelos flexibles, incluyendo licencias gratuitas a cambio de colaboración.</p></div><div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-microphone-alt"></i></div><h3>Producción Personalizada</h3><p>¿Necesitas una identidad sonora única? Nuestro equipo creará la banda sonora, jingle o efecto de sonido perfecto para tu visión.</p></div></div></div></section>
@@ -163,20 +137,42 @@
         <section id="contacto"><div class="container"><div class="contact-container" data-aos="zoom-in"><h2>Demos <span class="highlight">Play</span> a tu Próxima Idea</h2><p>Si buscas crear un proyecto desde cero, o si eres un artista interesado en colaborar, este es el punto de partida. Contáctanos por Telegram para una comunicación directa.</p><div class="contact-info"><p><i class="fab fa-telegram"></i> Hablemos en Telegram: <strong>+57 300 855 6516</strong></p></div><div class="social-icons"><a href="https://www.facebook.com/share/1H4G69Dq1f/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a></div></div></div></section>
     </main>
 
-    <footer><div class="container"><p>&copy; 2025 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p></div></footer>
+    <footer><div class="container"><p>&copy; 2024 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p></div></footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         window.addEventListener('load', () => { const preloader = document.getElementById('preloader'); setTimeout(() => { preloader.classList.add('loaded'); document.body.classList.remove('loading'); }, 2000); });
+        
         document.addEventListener('DOMContentLoaded', () => {
             AOS.init({ duration: 800, once: true, offset: 50 });
+
+            // Lógica del Slider
             const slides = document.querySelectorAll('.slide');
             if(slides.length > 0) { let currentSlide = 0; setInterval(() => { slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }, 5000); }
+            
+            // Lógica del Menú Hamburguesa
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.querySelector('.nav-links');
             const navLinksItems = document.querySelectorAll('.nav-links li a');
             menuToggle.addEventListener('click', () => { menuToggle.classList.toggle('active'); navLinks.classList.toggle('nav-active'); });
             navLinksItems.forEach(link => { link.addEventListener('click', () => { if (navLinks.classList.contains('nav-active')) { menuToggle.classList.remove('active'); navLinks.classList.remove('nav-active'); } }); });
+
+            // ===== JAVASCRIPT PARA NAVBAR INTELIGENTE =====
+            const header = document.querySelector('header');
+            let lastScrollTop = 0;
+
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scroll hacia Abajo
+                    header.classList.add('header-hidden');
+                } else {
+                    // Scroll hacia Arriba
+                    header.classList.remove('header-hidden');
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Para manejar el scroll en Safari
+            }, false);
         });
     </script>
 </body>
