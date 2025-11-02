@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <title>WAV21 - El Sonido Puro de la Creatividad</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,9 +12,6 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
-        /* ------------------- */
-        /* --- ESTILOS CSS --- */
-        /* ------------------- */
         :root {
             --color-primario: #00BFFF; /* Deep Sky Blue */
             --color-primario-oscuro: #009ACD;
@@ -29,23 +25,9 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: var(--fuente-principal); background-color: var(--color-fondo); color: var(--color-texto-principal); line-height: 1.7; overflow-x: hidden; }
         
-        /* ===== LA LÍNEA MÁGICA ESTÁ AQUÍ ===== */
-        /* Esto crea un contenedor raíz rígido y previene cualquier desbordamiento horizontal */
-        html {
-            scroll-behavior: smooth;
-            overflow-x: hidden; 
-        }
-
-        body {
-            font-family: var(--fuente-principal);
-            background-color: var(--color-fondo);
-            color: var(--color-texto-principal);
-            line-height: 1.7;
-            overflow-x: hidden; /* Doble seguro, buena práctica */
-        }
-
-        /* --- PRELOADER / ANIMACIÓN DE ENTRADA --- */
         #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--color-fondo); display: grid; place-items: center; z-index: 2000; transition: opacity 0.8s ease, visibility 0.8s ease; }
         #preloader.loaded { opacity: 0; visibility: hidden; }
         .preloader-logo { font-size: 3rem; font-weight: 700; color: var(--color-texto-principal); overflow: hidden; }
@@ -54,7 +36,6 @@
         @keyframes revealText { to { opacity: 1; transform: translateY(0); } }
         body.loading { overflow: hidden; }
 
-        /* --- ESTILOS GENERALES (SIN CAMBIOS) --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px; }
         h1, h2, h3 { font-weight: 700; margin-bottom: 20px; }
         h1 { font-size: clamp(3rem, 7vw, 5.5rem); }
@@ -64,7 +45,6 @@
         section { padding: 100px 0; }
         span.highlight { color: var(--color-primario); }
 
-        /* --- CABECERA Y NAVEGACIÓN --- */
         header { position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0; background-color: rgba(10, 10, 10, 0.7); backdrop-filter: blur(12px); z-index: 1000; transition: all var(--transicion-rapida); }
         header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 2rem; font-weight: 700; color: var(--color-texto-principal); text-decoration: none; }
@@ -75,7 +55,6 @@
         .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 50%; width: 0; height: 2px; background-color: var(--color-primario); transition: all 0.4s ease-out; transform: translateX(-50%); }
         .nav-links a:hover::after { width: 100%; }
         
-        /* --- MENÚ HAMBURGUESA --- */
         .menu-toggle { display: none; width: 30px; height: 22px; position: relative; cursor: pointer; z-index: 1002; }
         .menu-toggle span { display: block; position: absolute; height: 3px; width: 100%; background: var(--color-texto-principal); border-radius: 9px; opacity: 1; left: 0; transform: rotate(0deg); transition: .25s ease-in-out; }
         .menu-toggle span:nth-child(1) { top: 0px; }
@@ -85,8 +64,7 @@
         .menu-toggle.active span:nth-child(2) { opacity: 0; left: -30px; }
         .menu-toggle.active span:nth-child(3) { top: 9px; transform: rotate(-135deg); }
 
-        /* --- SECCIÓN HERO --- */
-        #hero { height: 100vh; min-height: 700px; padding: 0; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; color: #fff; }
+        #hero { height: 100vh; min-height: 700px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; color: #fff; }
         .slider-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); animation: kenburns 25s infinite ease-in-out; }
         .slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop'); }
@@ -96,16 +74,20 @@
         @keyframes kenburns { 0%, 100% { transform: scale(1.1) translate(0, 0); } 50% { transform: scale(1) translate(3%, -3%); } }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(10, 10, 10, 0.9), rgba(0, 0, 0, 0.3)); }
         .hero-content { position: relative; z-index: 2; }
-        .hero-content h1, .hero-content p, .hero-content .cta-button { opacity: 0; animation: fadeInUp 1s ease-out forwards; animation-delay: 2.5s; }
+        .hero-content h1, .hero-content p, .hero-content .cta-button, .hero-content .secondary-link { opacity: 0; animation: fadeInUp 1s ease-out forwards; animation-delay: 2.5s; }
         .hero-content p { animation-delay: 2.8s; }
         .hero-content .cta-button { animation-delay: 3.1s; }
+        .hero-content .secondary-link { animation-delay: 3.4s; }
         @keyframes fadeInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .hero-content p { font-size: 1.3rem; max-width: 650px; margin: 0 auto 35px auto; color: #e0e0e0; text-shadow: 1px 1px 8px rgba(0,0,0,0.8); }
         .cta-button { display: inline-block; background: linear-gradient(90deg, var(--color-primario), var(--color-primario-oscuro)); background-size: 200% 100%; color: #fff; padding: 16px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; border: none; transition: all 0.4s ease; box-shadow: 0 5px 20px rgba(0, 191, 255, 0.2); position: relative; overflow: hidden; }
         .cta-button:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 191, 255, 0.4); background-position: 100% 0; }
-        .cta-button .fa-play { margin-left: 10px; }
+        .cta-button .fa-star, .cta-button .fa-play { margin-left: 10px; }
 
-        /* --- Resto de Estilos --- */
+        .secondary-link { display: block; margin-top: 20px; color: var(--color-texto-secundario); }
+        .secondary-link a { color: var(--color-texto-principal); text-decoration: underline; text-underline-offset: 4px; transition: color var(--transicion-rapida); }
+        .secondary-link a:hover { color: var(--color-primario); }
+
         .grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card { background: var(--color-superficie); padding: 40px; border-radius: 15px; border-left: 3px solid transparent; transition: all var(--transicion-rapida); }
         .card:hover { transform: translateY(-10px); border-left-color: var(--color-primario); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
@@ -114,6 +96,13 @@
         .about-text, .about-image { flex: 1; }
         .about-image img { max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); }
 
+        #colabora { background: linear-gradient(135deg, var(--color-primario-oscuro), var(--color-primario)); color: white; }
+        #colabora h2, #colabora h2 .highlight { color: white; }
+        #colabora p { color: rgba(255, 255, 255, 0.85); max-width: 800px; margin-left: auto; margin-right: auto; }
+        .colabora-content { text-align: center; }
+        .cta-button.white { background: white; color: var(--color-primario-oscuro); box-shadow: none; }
+        .cta-button.white:hover { background: var(--color-texto-principal); color: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        
         #contacto { background-color: var(--color-superficie); }
         .contact-container { max-width: 800px; margin: 0 auto; text-align: center; }
         .social-icons { margin-top: 30px; display: flex; justify-content: center; gap: 30px; }
@@ -123,7 +112,6 @@
         .contact-info i { color: var(--color-primario); margin-right: 15px; }
         footer { text-align: center; padding: 40px 20px; background-color: #000; }
 
-        /* --- ESTILOS RESPONSIVOS --- */
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
             section { padding: 70px 0; }
@@ -137,6 +125,7 @@
             .nav-links.nav-active li:nth-child(2) { transition-delay: 0.3s; }
             .nav-links.nav-active li:nth-child(3) { transition-delay: 0.4s; }
             .nav-links.nav-active li:nth-child(4) { transition-delay: 0.5s; }
+            .nav-links.nav-active li:nth-child(5) { transition-delay: 0.6s; } /* Ajuste para el nuevo item */
             .about-content { flex-direction: column; text-align: center; }
             .about-text { order: 2; }
             .about-image { order: 1; margin-bottom: 40px; }
@@ -153,8 +142,9 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="#sobre-nosotros">Nosotros</a></li>
-                    <li><a href="#porque-wav">¿Por qué WAV?</a></li>
                     <li><a href="#servicios">Servicios</a></li>
+                    <!-- ===== NUEVO ENLACE AQUÍ ===== -->
+                    <li><a href="#colabora">Colabora</a></li>
                     <li><a href="#contacto">Contacto</a></li>
                 </ul>
                 <div class="menu-toggle" aria-label="Abrir menú"><span></span><span></span><span></span></div>
@@ -164,16 +154,14 @@
 
     <main>
         <section id="hero">
-            <div class="slider-container">
-                <div class="slide active"></div>
-                <div class="slide"></div>
-                <div class="slide"></div>
-            </div>
+            <div class="slider-container"><div class="slide active"></div><div class="slide"></div><div class="slide"></div></div>
             <div class="hero-overlay"></div>
             <div class="hero-content container">
                 <h1>WAV<span class="highlight">21</span><br>Sonido sin Compromisos</h1>
                 <p>Creamos experiencias auditivas en la máxima pureza. Calidad de estudio sin compresión para tus proyectos más ambiciosos.</p>
                 <a href="#contacto" class="cta-button">Inicia tu Proyecto <i class="fas fa-play"></i></a>
+                <!-- ===== NUEVO ENLACE SECUNDARIO AQUÍ ===== -->
+                <p class="secondary-link">¿Eres Artista? <a href="#colabora">Descubre cómo colaborar.</a></p>
             </div>
         </section>
 
@@ -202,7 +190,7 @@
                 </div>
             </div>
         </section>
-
+        
         <section id="servicios">
             <div class="container">
                 <h2 data-aos="fade-up">Soluciones Sonoras a tu <span class="highlight">Medida</span></h2>
@@ -213,16 +201,32 @@
                 </div>
             </div>
         </section>
+        
+        <!-- ===== SECCIÓN NUEVA Y MEJORADA ===== -->
+        <section id="colabora">
+            <div class="container">
+                <div class="colabora-content" data-aos="zoom-in-up">
+                    <h2>Tu Voz + Nuestro Sonido: <span class="highlight">Una Colaboración Épica</span></h2>
+                    <p>
+                        Creemos en el poder de la unión. Por eso, buscamos activamente a cantantes, raperos y melodistas con talento para que lleven nuestras producciones al siguiente nivel. Te ofrecemos acceso a nuestro catálogo de beats exclusivos en calidad de estudio WAV, **totalmente gratis**.
+                    </p>
+                    <p>
+                        Todo a través de un contrato de colaboración claro y justo que beneficie a ambas partes. Queremos crecer contigo.
+                    </p>
+                    <a href="#contacto" class="cta-button white" style="margin-top: 20px;">
+                        Quiero Colaborar <i class="fas fa-star"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
 
         <section id="contacto">
             <div class="container">
                 <div class="contact-container" data-aos="zoom-in">
                     <h2>Demos <span class="highlight">Play</span> a tu Próxima Idea</h2>
-                    <p>Estamos listos para colaborar. La comunicación más directa y rápida es a través de Telegram o encuéntranos en Facebook.</p>
+                    <p>Si buscas crear un proyecto desde cero, o si eres un artista interesado en colaborar, este es el punto de partida. Contáctanos por Telegram para una comunicación directa.</p>
                     <div class="contact-info"><p><i class="fab fa-telegram"></i> Hablemos en Telegram: <strong>+57 300 855 6516</strong></p></div>
-                    <div class="social-icons">
-                        <a href="https://www.facebook.com/share/1H4G69Dq1f/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
-                    </div>
+                    <div class="social-icons"><a href="https://www.facebook.com/share/1H4G69Dq1f/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a></div>
                 </div>
             </div>
         </section>
@@ -232,24 +236,17 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-    window.addEventListener('load', () => {
-        const preloader = document.getElementById('preloader');
-        setTimeout(() => { preloader.classList.add('loaded'); document.body.classList.remove('loading'); }, 2000); 
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        AOS.init({ duration: 800, once: true, offset: 50 });
-        const slides = document.querySelectorAll('.slide');
-        if(slides.length > 0) {
-            let currentSlide = 0;
-            setInterval(() => { slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }, 5000);
-        }
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-        const navLinksItems = document.querySelectorAll('.nav-links li a');
-        menuToggle.addEventListener('click', () => { menuToggle.classList.toggle('active'); navLinks.classList.toggle('nav-active'); });
-        navLinksItems.forEach(link => { link.addEventListener('click', () => { if (navLinks.classList.contains('nav-active')) { menuToggle.classList.remove('active'); navLinks.classList.remove('nav-active'); } }); });
-    });
+        window.addEventListener('load', () => { const preloader = document.getElementById('preloader'); setTimeout(() => { preloader.classList.add('loaded'); document.body.classList.remove('loading'); }, 2000); });
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ duration: 800, once: true, offset: 50 });
+            const slides = document.querySelectorAll('.slide');
+            if(slides.length > 0) { let currentSlide = 0; setInterval(() => { slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }, 5000); }
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            const navLinksItems = document.querySelectorAll('.nav-links li a');
+            menuToggle.addEventListener('click', () => { menuToggle.classList.toggle('active'); navLinks.classList.toggle('nav-active'); });
+            navLinksItems.forEach(link => { link.addEventListener('click', () => { if (navLinks.classList.contains('nav-active')) { menuToggle.classList.remove('active'); navLinks.classList.remove('nav-active'); } }); });
+        });
     </script>
 </body>
 </html>
