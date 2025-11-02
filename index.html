@@ -35,18 +35,8 @@
         p { margin-bottom: 15px; color: var(--color-texto-secundario); }
         section { padding: 100px 0; } span.highlight { color: var(--color-primario); }
 
-        /* ===== CSS PARA NAVBAR INTELIGENTE ===== */
-        header {
-            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0; background-color: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(12px); z-index: 1000;
-            /* Esta es la clave para la animación de entrada/salida */
-            transition: transform 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
-        }
-        /* Esta clase la añadiremos con JS para ocultar el header */
-        header.header-hidden {
-            transform: translateY(-100%);
-        }
-
+        header { position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0; background-color: rgba(10, 10, 10, 0.7); backdrop-filter: blur(12px); z-index: 1000; transition: transform 0.4s cubic-bezier(0.65, 0.05, 0.36, 1); }
+        header.header-hidden { transform: translateY(-100%); }
         header .container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 2rem; font-weight: 700; color: var(--color-texto-principal); text-decoration: none; }
         .logo span { color: var(--color-primario); }
@@ -94,8 +84,11 @@
         .cta-button.white:hover { background: var(--color-texto-principal); color: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #contacto { background-color: var(--color-superficie); } .contact-container { max-width: 800px; margin: 0 auto; text-align: center; }
         .social-icons { margin-top: 30px; display: flex; justify-content: center; gap: 30px; } .social-icons a { color: var(--color-texto-secundario); font-size: 2.2rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .social-icons a:hover { color: var(--color-primario); transform: scale(1.2) translateY(-3px); } .contact-info { font-size: 1.2rem; margin: 30px 0; background: var(--color-fondo); display: inline-block; padding: 15px 25px; border-radius: 10px; }
-        .contact-info i { color: var(--color-primario); margin-right: 15px; } footer { text-align: center; padding: 40px 20px; background-color: #000; }
+        .social-icons a:hover { color: var(--color-primario); transform: scale(1.2) translateY(-3px); } 
+        .contact-info { margin: 30px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .contact-info p { font-size: 1.2rem; background: var(--color-fondo); display: inline-block; padding: 15px 25px; border-radius: 10px; margin: 0; }
+        .contact-info i { color: var(--color-primario); margin-right: 15px; } 
+        footer { text-align: center; padding: 40px 20px; background-color: #000; }
 
         @media (max-width: 768px) {
             .container { padding: 0 20px; } section { padding: 70px 0; } h2 { margin-bottom: 30px; }
@@ -107,6 +100,7 @@
             .about-content { flex-direction: column; text-align: center; } .about-text { order: 2; } .about-image { order: 1; margin-bottom: 40px; }
             #hero { padding-top: 60px; } .hero-content h1 { font-size: clamp(2.5rem, 10vw, 3rem); line-height: 1.25; } .hero-content p { font-size: 1rem; margin: 15px auto 25px auto; }
             .cta-button { padding: 14px 28px; min-width: 200px; }
+            .contact-info p { font-size: 1rem; } /* Ajuste de tamaño para móvil */
         }
     </style>
 </head>
@@ -134,10 +128,29 @@
         <section id="porque-wav" style="background-color: var(--color-superficie);"><div class="container"><h2 data-aos="fade-up">La Ventaja de la Calidad <span class="highlight">Absoluta</span></h2><div class="grid-layout"><div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-wave-square"></i></div><h3>Máxima Fidelidad</h3><p>WAV es audio sin comprimir. Escuchas el 100% de la data sonora, capturando la profundidad y el rango dinámico completo del performance original.</p></div><div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-medal"></i></div><h3>Estándar Profesional</h3><p>El formato de facto para masterización y producción en la industria. Perfecto para cine, broadcast y donde la calidad es innegociable.</p></div><div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-drafting-compass"></i></div><h3>Precisión para Edición</h3><p>La integridad de un archivo WAV te da una flexibilidad inigualable para edición y mezcla, sin degradar la calidad con cada cambio.</p></div></div></div></section>
         <section id="servicios"><div class="container"><h2 data-aos="fade-up">Soluciones Sonoras a tu <span class="highlight">Medida</span></h2><div class="grid-layout"><div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-music"></i></div><h3>Librería de Pistas Premium</h3><p>Adquiere licencias de nuestra creciente librería de música original en formato WAV, curada para todo tipo de proyectos audiovisuales y creativos.</p></div><div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-file-signature"></i></div><h3>Alianzas y Contratos</h3><p>Trabajamos bajo convenios con creadores y marcas. Ofrecemos modelos flexibles, incluyendo licencias gratuitas a cambio de colaboración.</p></div><div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-microphone-alt"></i></div><h3>Producción Personalizada</h3><p>¿Necesitas una identidad sonora única? Nuestro equipo creará la banda sonora, jingle o efecto de sonido perfecto para tu visión.</p></div></div></div></section>
         <section id="colabora"><div class="container"><div class="colabora-content" data-aos="zoom-in-up"><h2>Tu Voz + Nuestro Sonido: <span class="highlight">Una Colaboración Épica</span></h2><p>Creemos en el poder de la unión. Por eso, buscamos activamente a cantantes, raperos y melodistas con talento para que lleven nuestras producciones al siguiente nivel. Te ofrecemos acceso a nuestro catálogo de beats exclusivos en calidad de estudio WAV, **totalmente gratis**.</p><p>Todo a través de un contrato de colaboración claro y justo que beneficie a ambas partes. Queremos crecer contigo.</p><a href="#contacto" class="cta-button white" style="margin-top: 20px;">Quiero Colaborar <i class="fas fa-star"></i></a></div></div></section>
-        <section id="contacto"><div class="container"><div class="contact-container" data-aos="zoom-in"><h2>Demos <span class="highlight">Play</span> a tu Próxima Idea</h2><p>Si buscas crear un proyecto desde cero, o si eres un artista interesado en colaborar, este es el punto de partida. Contáctanos por Telegram para una comunicación directa.</p><div class="contact-info"><p><i class="fab fa-telegram"></i> Hablemos en Telegram: <strong>+57 300 855 6516</strong></p></div><div class="social-icons"><a href="https://www.facebook.com/share/1H4G69Dq1f/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a></div></div></div></section>
+        
+        <!-- ===== SECCIÓN DE CONTACTO ACTUALIZADA ===== -->
+        <section id="contacto">
+            <div class="container">
+                <div class="contact-container" data-aos="zoom-in">
+                    <h2>Demos <span class="highlight">Play</span> a tu Próxima Idea</h2>
+                    <p>Si buscas crear un proyecto desde cero, o si eres un artista interesado en colaborar, este es el punto de partida. Contáctanos por Telegram para una comunicación directa o escríbenos a nuestro correo de soporte.</p>
+                    <div class="contact-info">
+                        <p><i class="fab fa-telegram"></i> Telegram: <strong>+57 300 855 6516</strong></p>
+                        <!-- NUEVO EMAIL AQUÍ -->
+                        <p><i class="fas fa-envelope"></i> Soporte: <strong>wav21help@gmail.com</strong></p>
+                    </div>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/share/1H4G69Dq1f/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a>
+                        <!-- NUEVO TIKTOK AQUÍ -->
+                        <a href="https://www.tiktok.com/@wav_21tiktok" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer><div class="container"><p>&copy; 2025 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p></div></footer>
+    <footer><div class="container"><p>&copy; 2024 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p></div></footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -145,33 +158,20 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             AOS.init({ duration: 800, once: true, offset: 50 });
-
-            // Lógica del Slider
             const slides = document.querySelectorAll('.slide');
             if(slides.length > 0) { let currentSlide = 0; setInterval(() => { slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }, 5000); }
-            
-            // Lógica del Menú Hamburguesa
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.querySelector('.nav-links');
             const navLinksItems = document.querySelectorAll('.nav-links li a');
             menuToggle.addEventListener('click', () => { menuToggle.classList.toggle('active'); navLinks.classList.toggle('nav-active'); });
             navLinksItems.forEach(link => { link.addEventListener('click', () => { if (navLinks.classList.contains('nav-active')) { menuToggle.classList.remove('active'); navLinks.classList.remove('nav-active'); } }); });
-
-            // ===== JAVASCRIPT PARA NAVBAR INTELIGENTE =====
             const header = document.querySelector('header');
             let lastScrollTop = 0;
-
             window.addEventListener('scroll', function() {
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-                if (scrollTop > lastScrollTop && scrollTop > 100) {
-                    // Scroll hacia Abajo
-                    header.classList.add('header-hidden');
-                } else {
-                    // Scroll hacia Arriba
-                    header.classList.remove('header-hidden');
-                }
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Para manejar el scroll en Safari
+                if (scrollTop > lastScrollTop && scrollTop > 100) { header.classList.add('header-hidden'); } 
+                else { header.classList.remove('header-hidden'); }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
             }, false);
         });
     </script>
