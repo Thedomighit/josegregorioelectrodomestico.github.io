@@ -70,7 +70,7 @@
         .hero-content p { font-size: 1.2rem; max-width: 650px; margin: 20px auto 30px auto; color: #e0e0e0; text-shadow: 1px 1px 8px rgba(0,0,0,0.8); }
         .cta-button { display: inline-block; background: linear-gradient(90deg, var(--color-primario), var(--color-primario-oscuro)); background-size: 200% 100%; color: #fff; padding: 16px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; border: none; transition: all 0.4s ease; box-shadow: 0 5px 20px rgba(0, 191, 255, 0.2); position: relative; overflow: hidden; }
         .cta-button:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 191, 255, 0.4); background-position: 100% 0; }
-        .cta-button .fa-star, .cta-button .fa-play { margin-left: 10px; }
+        .cta-button .fa-star, .cta-button .fa-play, .cta-button .fa-shopping-bag { margin-left: 10px; }
         .secondary-link { display: block; margin-top: 20px; color: var(--color-texto-secundario); }
         .secondary-link a { color: var(--color-texto-principal); text-decoration: underline; text-underline-offset: 4px; transition: color var(--transicion-rapida); }
         .secondary-link a:hover { color: var(--color-primario); }
@@ -85,11 +85,6 @@
         .colabora-content { text-align: center; } .cta-button.white { background: white; color: var(--color-primario-oscuro); box-shadow: none; }
         .cta-button.white:hover { background: var(--color-texto-principal); color: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #contacto { background-color: var(--color-superficie); } .contact-container { max-width: 800px; margin: 0 auto; text-align: center; }
-        .social-icons { margin-top: 30px; display: flex; justify-content: center; gap: 30px; } .social-icons a { color: var(--color-texto-secundario); font-size: 2.2rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .social-icons a:hover { color: var(--color-primario); transform: scale(1.2) translateY(-3px); } 
-        .contact-info { margin: 30px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .contact-info p { font-size: 1.2rem; background: var(--color-fondo); display: inline-block; padding: 15px 25px; border-radius: 10px; margin: 0; }
-        .contact-info i { color: var(--color-primario); margin-right: 15px; } 
         
         footer { text-align: center; padding: 40px 20px; background-color: #000; }
         .footer-content { display: flex; flex-direction: column; align-items: center; gap: 20px; }
@@ -102,37 +97,22 @@
             .nav-links.nav-active { right: 0; }
             .nav-links li { opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease, transform 0.5s ease; }
             .nav-links.nav-active li { opacity: 1; transform: translateX(0); } .nav-links.nav-active li:nth-child(1) { transition-delay: 0.2s; } .nav-links.nav-active li:nth-child(2) { transition-delay: 0.3s; } .nav-links.nav-active li:nth-child(3) { transition-delay: 0.4s; }
-            .nav-links.nav-active li:nth-child(4) { transition-delay: 0.5s; } .nav-links.nav-active li:nth-child(5) { transition-delay: 0.6s; }
+            .nav-links.nav-active li:nth-child(4) { transition-delay: 0.5s; }
             .about-content { flex-direction: column; text-align: center; } .about-text { order: 2; } .about-image { order: 1; margin-bottom: 40px; }
             #hero { padding-top: 60px; } .hero-content h1 { font-size: clamp(2.5rem, 10vw, 3rem); line-height: 1.25; } .hero-content p { font-size: 1rem; margin: 15px auto 25px auto; }
             .cta-button { padding: 14px 28px; min-width: 200px; } .contact-info p { font-size: 1rem; }
         }
         
-        /* ===== NUEVOS ESTILOS PARA MODAL DEL FUNDADOR ===== */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85);
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
-            opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-
-        .modal-content {
-            background: var(--color-fondo); padding: 40px; border-radius: 15px; border-top: 3px solid var(--color-primario);
-            max-width: 600px; width: 90%; color: var(--color-texto-principal); position: relative;
-            transform: translateY(-20px) scale(0.95); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
+        .modal-content { background: var(--color-fondo); padding: 40px; border-radius: 15px; border-top: 3px solid var(--color-primario); max-width: 600px; width: 90%; color: var(--color-texto-principal); position: relative; transform: translateY(-20px) scale(0.95); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
         .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
-
-        .modal-close-btn {
-            position: absolute; top: 15px; right: 15px; background: none; border: none;
-            color: var(--color-texto-secundario); font-size: 1.8rem; cursor: pointer; transition: color var(--transicion-rapida), transform var(--transicion-rapida);
-        }
+        .modal-close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--color-texto-secundario); font-size: 1.8rem; cursor: pointer; transition: color var(--transicion-rapida), transform var(--transicion-rapida); }
         .modal-close-btn:hover { color: var(--color-texto-principal); transform: rotate(90deg); }
-        
         .modal-content h2 { color: var(--color-texto-principal); font-size: 1.8rem; margin-bottom: 5px; }
         .modal-content h4 { color: var(--color-primario); font-size: 1rem; font-weight: 400; margin-bottom: 25px; }
         .modal-content .quote { font-style: italic; color: var(--color-texto-secundario); border-left: 3px solid var(--color-primario); padding-left: 20px; margin-top: 30px; font-size: 0.9rem; }
-        .modal-content .quote::before { content: ''; } /* Remove quote marks if not desired */
+        .modal-content .quote::before { content: ''; }
     </style>
 </head>
 <body class="loading">
@@ -143,15 +123,31 @@
     </header>
 
     <main>
-        <section id="hero"><div class="slider-container"><div class="slide active"></div><div class="slide"></div><div class="slide"></div></div><div class="hero-overlay"></div><div class="hero-content container"><h1>WAV<span class="highlight">21</span> Sonido sin Compromisos</h1><p>Creamos experiencias auditivas en la máxima pureza. Calidad de estudio sin compresión para tus proyectos más ambiciosos.</p><a href="#contacto" class="cta-button">Inicia tu Proyecto <i class="fas fa-play"></i></a><p class="secondary-link">¿Eres Artista? <a href="#colabora">Descubre cómo colaborar.</a></p></div></section>
+        <!-- ===== HERO SECTION BUTTON UPDATED ===== -->
+        <section id="hero"><div class="slider-container"><div class="slide active"></div><div class="slide"></div><div class="slide"></div></div><div class="hero-overlay"></div><div class="hero-content container"><h1>WAV<span class="highlight">21</span> Sonido sin Compromisos</h1><p>Creamos experiencias auditivas en la máxima pureza. Calidad de estudio sin compresión para tus proyectos más ambiciosos.</p><a href="https://es.fiverr.com/s/Kem1Kp8" target="_blank" rel="noopener noreferrer" class="cta-button">Inicia tu Proyecto <i class="fas fa-play"></i></a><p class="secondary-link">¿Eres Artista? <a href="#colabora">Descubre cómo colaborar.</a></p></div></section>
+        
         <section id="sobre-nosotros"><div class="container"><h2 data-aos="fade-up">Somos <span class="highlight">Artesanos</span> del Audio</h2><div class="about-content"><div class="about-text" data-aos="fade-right" data-aos-delay="200"><h3>Nuestra Misión: Preservar la Esencia del Sonido</h3><p>WAV21 nació de la obsesión por la fidelidad sónica. En una era digital de formatos comprimidos, defendemos el alma de la grabación original. Somos un colectivo de productores y músicos dedicados a entregar audio tal como fue concebido en el estudio: puro, rico y sin pérdidas.</p></div><div class="about-image" data-aos="fade-left" data-aos-delay="200"><img src="https://images.unsplash.com/photo-1616356610237-fd5e89a59b67?q=80&w=1964&auto=format&fit=crop" alt="Estudio de grabación WAV21"></div></div></div></section>
         <section id="porque-wav" style="background-color: var(--color-superficie);"><div class="container"><h2 data-aos="fade-up">La Ventaja de la Calidad <span class="highlight">Absoluta</span></h2><div class="grid-layout"><div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-wave-square"></i></div><h3>Máxima Fidelidad</h3><p>WAV es audio sin comprimir. Escuchas el 100% de la data sonora, capturando la profundidad y el rango dinámico completo del performance original.</p></div><div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-medal"></i></div><h3>Estándar Profesional</h3><p>El formato de facto para masterización y producción en la industria. Perfecto para cine, broadcast y donde la calidad es innegociable.</p></div><div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-drafting-compass"></i></div><h3>Precisión para Edición</h3><p>La integridad de un archivo WAV te da una flexibilidad inigualable para edición y mezcla, sin degradar la calidad con cada cambio.</p></div></div></div></section>
         <section id="servicios"><div class="container"><h2 data-aos="fade-up">Soluciones Sonoras a tu <span class="highlight">Medida</span></h2><div class="grid-layout"><div class="card" data-aos="fade-up" data-aos-delay="100"><div class="icon"><i class="fas fa-music"></i></div><h3>Librería de Pistas Premium</h3><p>Adquiere licencias de nuestra creciente librería de música original en formato WAV, curada para todo tipo de proyectos audiovisuales y creativos.</p></div><div class="card" data-aos="fade-up" data-aos-delay="200"><div class="icon"><i class="fas fa-file-signature"></i></div><h3>Alianzas y Contratos</h3><p>Trabajamos bajo convenios con creadores y marcas. Ofrecemos modelos flexibles, incluyendo licencias gratuitas a cambio de colaboración.</p></div><div class="card" data-aos="fade-up" data-aos-delay="300"><div class="icon"><i class="fas fa-microphone-alt"></i></div><h3>Producción Personalizada</h3><p>¿Necesitas una identidad sonora única? Nuestro equipo creará la banda sonora, jingle o efecto de sonido perfecto para tu visión artística.</p></div><div class="card" data-aos="fade-up" data-aos-delay="400"><div class="icon"><i class="fas fa-tv"></i></div><h3>Audio para Marcas y Medios</h3><p>Llevamos tu mensaje al siguiente nivel. Creamos música original con voces profesionales para comerciales de TV, anuncios de productos y más.</p></div></div></div></section>
-        <section id="colabora"><div class="container"><div class="colabora-content" data-aos="zoom-in-up"><h2>Tu Voz + Nuestro Sonido: <span class="highlight">Una Colaboración Épica</span></h2><p>Creemos en el poder de la unión. Por eso, buscamos activamente a cantantes, raperos y melodistas con talento para que lleven nuestras producciones al siguiente nivel. Te ofrecemos acceso a nuestro catálogo de beats exclusivos en calidad de estudio WAV, **totalmente gratis**.</p><p>Todo a través de un contrato de colaboración claro y justo que beneficie a ambas partes. Queremos crecer contigo.</p><a href="#contacto" class="cta-button white" style="margin-top: 20px;">Quiero Colaborar <i class="fas fa-star"></i></a></div></div></section>
-        <section id="contacto"><div class="container"><div class="contact-container" data-aos="zoom-in"><h2>Demos <span class="highlight">Play</span> a tu Próxima Idea</h2><p>Si buscas crear un proyecto desde cero, o si eres un artista interesado en colaborar, este es el punto de partida. Contáctanos por Telegram para una comunicación directa o escríbenos a nuestro correo de soporte.</p><div class="contact-info"><p><i class="fab fa-telegram"></i> Telegram: <strong>+57 300 855 6516</strong></p><p><i class="fas fa-envelope"></i> Soporte: <strong>wav21help@gmail.com</strong></p></div><div class="social-icons"><a href="https://www.facebook.com/share/1H4G69Dq1f/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-square"></i></a><a href="https://www.tiktok.com/@wav_21tiktok" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a></div></div></div></section>
+        
+        <!-- ===== COLLABORATE SECTION BUTTON UPDATED ===== -->
+        <section id="colabora"><div class="container"><div class="colabora-content" data-aos="zoom-in-up"><h2>Tu Voz + Nuestro Sonido: <span class="highlight">Una Colaboración Épica</span></h2><p>Creemos en el poder de la unión. Por eso, buscamos activamente a cantantes, raperos y melodistas con talento para que lleven nuestras producciones al siguiente nivel. Te ofrecemos acceso a nuestro catálogo de beats exclusivos en calidad de estudio WAV, **totalmente gratis**.</p><p>Todo a través de un contrato de colaboración claro y justo que beneficie a ambas partes. Gestionamos las propuestas a través de Fiverr.</p><a href="https://es.fiverr.com/s/Kem1Kp8" target="_blank" rel="noopener noreferrer" class="cta-button white" style="margin-top: 20px;">Proponer Colaboración <i class="fas fa-star"></i></a></div></div></section>
+        
+        <!-- ===== CONTACT SECTION COMPLETELY REDESIGNED ===== -->
+        <section id="contacto">
+            <div class="container">
+                <div class="contact-container" data-aos="zoom-in">
+                    <h2>Listos para Crear</h2>
+                    <p>Para adquirir nuestros servicios o proponer una colaboración, gestionamos todas las compras y comunicaciones de manera segura y profesional a través de Fiverr. Es la forma más directa de empezar a trabajar juntos. ¡Haz clic para ver nuestros servicios!</p>
+                    <a href="https://es.fiverr.com/s/Kem1Kp8" target="_blank" rel="noopener noreferrer" class="cta-button" style="margin-top: 20px;">
+                        Ver Servicios en Fiverr
+                        <i class="fas fa-shopping-bag"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- ===== FOOTER ACTUALIZADO CON BOTÓN DEL MODAL ===== -->
     <footer>
         <div class="container footer-content">
             <p>&copy; 2025 WAV21. Todos los derechos reservados. El Sonido en su Estado Puro.</p>
@@ -159,7 +155,6 @@
         </div>
     </footer>
     
-    <!-- ===== NUEVO HTML PARA EL MODAL DEL FUNDADOR ===== -->
     <div id="founder-modal" class="modal-overlay">
         <div class="modal-content">
             <button id="close-modal-btn" class="modal-close-btn" aria-label="Cerrar">&times;</button>
@@ -177,14 +172,19 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             AOS.init({ duration: 800, once: true, offset: 50 });
-            // Lógica existente...
             const slides = document.querySelectorAll('.slide');
             if(slides.length > 0) { let currentSlide = 0; setInterval(() => { slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }, 5000); }
             const menuToggle = document.querySelector('.menu-toggle');
             const navLinks = document.querySelector('.nav-links');
             const navLinksItems = document.querySelectorAll('.nav-links li a');
             menuToggle.addEventListener('click', () => { menuToggle.classList.toggle('active'); navLinks.classList.toggle('nav-active'); });
-            navLinksItems.forEach(link => { link.addEventListener('click', () => { if (navLinks.classList.contains('nav-active')) { menuToggle.classList.remove('active'); navLinks.classList.remove('nav-active'); } }); });
+            navLinksItems.forEach(link => { link.addEventListener('click', (e) => {
+                if(link.getAttribute('href').startsWith('#')) {
+                    if (navLinks.classList.contains('nav-active')) { 
+                        menuToggle.classList.remove('active'); navLinks.classList.remove('nav-active'); 
+                    }
+                }
+            }); });
             const header = document.querySelector('header');
             let lastScrollTop = 0;
             window.addEventListener('scroll', function() {
@@ -194,37 +194,15 @@
                 lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
             }, false);
 
-            // ===== NUEVO JAVASCRIPT PARA EL MODAL =====
             const openModalBtn = document.getElementById('open-modal-btn');
             const closeModalBtn = document.getElementById('close-modal-btn');
             const modal = document.getElementById('founder-modal');
-
-            function openModal() {
-                modal.classList.add('active');
-                document.body.classList.add('modal-open');
-            }
-
-            function closeModal() {
-                modal.classList.remove('active');
-                document.body.classList.remove('modal-open');
-            }
-
+            function openModal() { modal.classList.add('active'); document.body.classList.add('modal-open'); }
+            function closeModal() { modal.classList.remove('active'); document.body.classList.remove('modal-open'); }
             openModalBtn.addEventListener('click', openModal);
             closeModalBtn.addEventListener('click', closeModal);
-
-            // Cerrar al hacer clic fuera del contenido
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    closeModal();
-                }
-            });
-
-            // Cerrar con la tecla "Escape"
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && modal.classList.contains('active')) {
-                    closeModal();
-                }
-            });
+            modal.addEventListener('click', (event) => { if (event.target === modal) { closeModal(); } });
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modal.classList.contains('active')) { closeModal(); } });
         });
     </script>
 </body>
