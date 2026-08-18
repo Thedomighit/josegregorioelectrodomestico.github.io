@@ -1,1087 +1,2516 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor de Tareas de Reasignación</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* --- VARIABLES DE ESTILO --- */
-        :root {
-            --primary-color: #0077c2;
-            --secondary-color: #555e6a;
-            --background-light: #f4f6f9;
-            --card-background: #ffffff;
-            --border-color: #e0e0e0;
-            --success-color: #1a995e;
-            --danger-color: #d9534f;
-            --excel-header-color: #e6f7ff;
-            --excel-border-color: #c9c9c9;
-            --complete-button-color: #ff9800;
-            --history-color: #00bcd4;
-            --font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
-            --toggle-color: #6c757d;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Softkoora — Soluciones Digitales Premium</title>
+<meta name="description" content="Softkoora diseña y construye software a medida: plataformas, sistemas y automatizaciones que resuelven problemas reales de tu negocio.">
 
-        /* --- ESTILOS GENERALES Y LAYOUT --- */
-        body {
-            font-family: var(--font-family);
-            margin: 0;
-            padding: 20px;
-            background-color: var(--background-light);
-            color: #333;
-            line-height: 1.6;
-        }
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 30px;
-            background: var(--card-background);
-            border-radius: 12px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-        /* Títulos */
-        h1 {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-            font-weight: 300;
-            font-size: 2.2em;
-        }
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
 
-        /* Secciones */
-        .section {
-            margin-bottom: 35px;
-            padding: 25px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            background-color: #ffffff;
-            transition: box-shadow 0.3s;
-        }
-        
-        .section:hover {
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        }
+<style>
+:root{
+  --bg-primary:#050510;
+  --bg-secondary:#0a0a1f;
+  --bg-tertiary:#0f0f2a;
+  --accent-blue:#3b82f6;
+  --accent-purple:#8b5cf6;
+  --accent-violet:#a855f7;
+  --text-primary:#f0f0f5;
+  --text-secondary:#9090a8;
+  --text-muted:#6b6b80;
+  --glass-bg:rgba(15,15,42,0.45);
+  --glass-border:rgba(139,92,246,0.18);
+  --radius:16px;
+}
 
-        /* Encabezados de Sección con Toggle */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        .section-header h2 {
-            color: var(--secondary-color);
-            margin: 0;
-            font-size: 1.6em;
-            font-weight: 500;
-        }
-        
-        .section-header button {
-            background: none;
-            border: 1px solid var(--toggle-color);
-            color: var(--toggle-color);
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-        
-        .section-header button:hover {
-            background-color: var(--toggle-color);
-            color: white;
-        }
-        
-        .section-content {
-            padding-top: 10px;
-            transition: max-height 0.5s ease-in-out, opacity 0.5s;
-            overflow: hidden;
-        }
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:90px;
+}
 
-        /* --- ITEMS DE COPIA Y BOTONES --- */
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            gap: 15px;
-            flex-wrap: wrap;
-            border-bottom: 1px dashed #eee;
-            padding-bottom: 8px;
-        }
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  overflow-x:hidden;
+  max-width:100vw;
+  position:relative;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
 
-        .info-item strong {
-            min-width: 150px; 
-            font-weight: 600;
-            color: #333;
-        }
+/* Subtle grid background */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(139,92,246,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(139,92,246,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+  z-index:0;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
+}
 
-        .copy-target {
-            background-color: #f7f7f7;
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid #dcdcdc;
-            flex-grow: 1;
-            min-width: 150px;
-            font-family: 'Consolas', monospace;
-            overflow-x: auto;
-            white-space: nowrap;
-            font-size: 0.9em;
-            transition: background-color 0.2s;
-        }
-        
-        .copy-target:focus {
-            background-color: #fff;
-            box-shadow: 0 0 0 2px var(--primary-color);
-        }
+/* Vignette */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(5,5,16,0.6) 100%);
+  pointer-events:none;
+  z-index:1;
+}
 
-        .editable-input {
-            width: auto;
-            color: var(--danger-color);
-            font-weight: bold;
-            border: 1px solid var(--danger-color);
-        }
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:600;line-height:1.1;letter-spacing:-0.02em}
 
-        .copy-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            text-align: center;
-            font-size: 0.9em;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: background-color 0.2s, transform 0.1s;
-            min-width: 100px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .copy-button:hover {
-            background-color: #005f9c;
-            transform: translateY(-1px);
-        }
+::selection{background:rgba(139,92,246,0.3);color:#fff}
 
-        /* --- GENERADOR DE TABLA --- */
-        #dataInput {
-            width: 100%;
-            min-height: 120px;
-            padding: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-family: 'Consolas', monospace;
-            resize: vertical;
-            background-color: #fff;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        
-        #generateButton, #copyAllIdsButton, #showHistoryButton {
-            transition: background-color 0.2s, box-shadow 0.2s;
-        }
+/* Scrollbar */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg-primary)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--accent-purple),var(--accent-blue));border-radius:4px}
 
-        #generateButton {
-            background-color: var(--success-color);
-            color: white;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        #generateButton:hover {
-            background-color: #15734e;
-        }
+/* ===== SCROLL PROGRESS ===== */
+.scroll-progress{
+  position:fixed;
+  top:0;
+  left:0;
+  height:2px;
+  background:linear-gradient(90deg,#8b5cf6,#3b82f6,#a855f7);
+  z-index:1000;
+  width:0%;
+  transition:width 0.1s linear;
+  box-shadow:0 0 10px rgba(139,92,246,0.5);
+}
 
-        /* Botones de Historial */
-        #showHistoryButton {
-            background-color: var(--history-color);
-            margin-left: 10px;
-        }
-        
-        #showHistoryButton:hover {
-             background-color: #0097a7;
-        }
+/* ===== CURSOR GLOW ===== */
+.cursor-glow{
+  position:fixed;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.08) 0%,rgba(59,130,246,0.04) 30%,transparent 70%);
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  z-index:2;
+  transition:opacity 0.4s ease;
+  will-change:transform;
+}
 
-        /* --- ESTILOS DE TABLAS (Responsive) --- */
-        .excel-table-container {
-             margin-top: 20px;
-             /* Permite el scroll horizontal en pantallas pequeñas */
-             overflow-x: auto; 
-             -webkit-overflow-scrolling: touch;
-        }
-        
-        .excel-table {
-            width: 100%;
-            min-width: 900px; /* Asegura que la tabla no se colapse demasiado */
-            border-collapse: collapse;
-            font-size: 0.85em;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+/* ===== UTILITIES ===== */
+.gradient-text{
+  background:linear-gradient(135deg,#8b5cf6 0%,#3b82f6 50%,#a855f7 100%);
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:gradientShift 6s ease infinite;
+  filter:drop-shadow(0 0 30px rgba(139,92,246,0.25));
+}
 
-        .excel-table th, .excel-table td {
-            border: 1px solid var(--excel-border-color);
-            padding: 10px 8px;
-            text-align: left;
-            white-space: nowrap; /* Evita que el texto de las celdas se rompa */
-        }
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
 
-        .excel-table th {
-            background-color: var(--excel-header-color);
-            font-weight: 600;
-            color: var(--secondary-color);
-            text-transform: uppercase;
-            position: sticky; 
-            top: 0; /* Sticky header para mejor UX */
-        }
-        
-        .excel-table tr:nth-child(even) {
-            background-color: #fcfcfc;
-        }
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);
+}
 
-        .excel-table .cell-copy {
-            cursor: copy;
-            font-weight: bold;
-            color: var(--primary-color);
-            background-color: #e6f7ff; 
-            transition: background-color 0.1s;
-        }
-        
-        .excel-table .cell-copy:hover {
-            background-color: #cceeff;
-        }
-        
-        /* Gestión de Comentarios */
-        .complete-row-button {
-            background-color: var(--complete-button-color);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-        
-        .comment-container {
-            padding: 12px;
-            margin-top: 10px;
-            border: 1px solid var(--complete-button-color);
-            border-radius: 5px;
-            background-color: #fff8e1;
-            display: none;
-            position: relative;
-        }
-        
-        .comment-counter {
-            position: absolute;
-            top: -10px; /* Posicionado fuera */
-            right: 10px;
-            background-color: var(--danger-color);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.8em;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .comment-container textarea {
-            width: 100%;
-            height: 60px;
-            padding: 8px;
-            margin-top: 5px;
-            resize: vertical;
-            border: 1px solid #f9d8a3;
-            border-radius: 3px;
-        }
+.container-x{
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 1.5rem;
+}
 
-        .save-comment-button {
-            background-color: var(--success-color);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin-top: 5px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s;
-        }
-        
-        /* Historial Styling */
-        .history-table td:last-child {
-             max-width: 300px;
-             word-wrap: break-word;
-             font-size: 0.8em;
-             background-color: #e6f7ff;
-             color: #333;
-        }
-        
-        .history-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+@media(min-width:768px){
+  .container-x{padding:0 3rem}
+}
 
-        #deleteAllHistoryButton {
-            background-color: var(--danger-color);
-            color: white;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.2s;
-        }
-        
-        #deleteAllHistoryButton:hover {
-             background-color: #b33936;
-        }
-        
-        .edit-comment-button {
-            background-color: var(--history-color);
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8em;
-            transition: background-color 0.2s;
-        }
-        
-        /* --- NOTIFICACIÓN DE AUTO-GUARDADO --- */
-        #saveNotification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            z-index: 1000;
-            font-size: 0.9em;
-        }
-        
-        #saveNotification.show {
-            opacity: 1;
-        }
-        
-        /* Estilo para el resultado de la búsqueda de medicamentos */
-        .search-container .info-item {
-            border: none;
-            padding-bottom: 0;
-            margin-top: 15px;
-            background-color: #f0f8ff; /* Fondo suave para destacar */
-            padding: 10px;
-            border-radius: 6px;
-        }
+section{
+  position:relative;
+  z-index:3;
+}
 
-        /* --- RESPONSIVE MOBILE --- */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 15px;
-                box-shadow: none;
-            }
-            h1 {
-                font-size: 1.8em;
-                margin-bottom: 20px;
-            }
-            .section-header h2 {
-                font-size: 1.3em;
-            }
-            .info-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            .info-item strong {
-                min-width: 100%;
-                margin-bottom: 0;
-            }
-            .info-item .copy-target, .info-item .copy-button {
-                flex-grow: 1;
-                width: 100%;
-            }
-            #generateButton, #showHistoryButton {
-                width: 100%;
-                margin-left: 0 !important;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
+/* Ambient orbs */
+.ambient-orb{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(100px);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ===== TEXT REVEAL ===== */
+.reveal-word{
+  display:inline-block;
+  overflow:hidden;
+  vertical-align:bottom;
+  padding-bottom:0.08em;
+  margin-bottom:-0.08em;
+}
+
+.reveal-inner{
+  display:inline-block;
+  will-change:transform,opacity,filter;
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+  padding:1.5rem 0;
+}
+
+.navbar.scrolled{
+  background:rgba(5,5,16,0.75);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(139,92,246,0.12);
+  padding:0.875rem 0;
+  box-shadow:0 4px 30px rgba(0,0,0,0.3);
+}
+
+.navbar-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:0.625rem;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+.logo-icon{
+  width:36px;
+  height:36px;
+  filter:drop-shadow(0 0 10px rgba(139,92,246,0.5));
+  animation:logoPulse 4s ease-in-out infinite;
+}
+
+@keyframes logoPulse{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(139,92,246,0.4))}
+  50%{filter:drop-shadow(0 0 18px rgba(139,92,246,0.7))}
+}
+
+.logo-text{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:1.35rem;
+  font-weight:600;
+  color:var(--text-primary);
+  letter-spacing:-0.02em;
+}
+
+.logo-text .accent{
+  background:linear-gradient(135deg,#8b5cf6,#3b82f6);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:2.5rem;
+  list-style:none;
+}
+
+.nav-link{
+  position:relative;
+  font-size:0.9rem;
+  color:var(--text-secondary);
+  text-decoration:none;
+  transition:color 0.3s ease;
+  font-weight:400;
+}
+
+.nav-link::after{
+  content:'';
+  position:absolute;
+  bottom:-6px;
+  left:0;
+  width:0;
+  height:1.5px;
+  background:linear-gradient(90deg,#8b5cf6,#3b82f6);
+  transition:width 0.35s cubic-bezier(0.16,1,0.3,1);
+  border-radius:1px;
+}
+
+.nav-link:hover{color:var(--text-primary)}
+.nav-link:hover::after{width:100%}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.875rem 1.75rem;
+  border-radius:12px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:0.9rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  text-decoration:none;
+  border:none;
+  position:relative;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#8b5cf6,#3b82f6);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(139,92,246,0.35),inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.btn-primary::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,#a855f7,#6366f1);
+  opacity:0;
+  transition:opacity 0.35s ease;
+}
+
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(139,92,246,0.5),inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.btn-primary:hover::before{opacity:1}
+
+.btn-primary span{position:relative;z-index:1}
+
+.btn-primary .arrow{
+  position:relative;
+  z-index:1;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+
+.btn-primary:hover .arrow{transform:translateX(4px)}
+
+.btn-secondary{
+  background:rgba(15,15,42,0.5);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  color:var(--text-primary);
+  border:1px solid rgba(139,92,246,0.2);
+}
+
+.btn-secondary:hover{
+  background:rgba(139,92,246,0.1);
+  border-color:rgba(139,92,246,0.4);
+  transform:translateY(-2px);
+  box-shadow:0 4px 20px rgba(139,92,246,0.15);
+}
+
+/* ===== HAMBURGER ===== */
+.hamburger{
+  display:none;
+  flex-direction:column;
+  justify-content:space-between;
+  width:28px;
+  height:20px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:0;
+  z-index:101;
+}
+
+.hamburger span{
+  display:block;
+  width:100%;
+  height:2px;
+  background:var(--text-primary);
+  border-radius:2px;
+  transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+  transform-origin:center;
+}
+
+.hamburger.active span:nth-child(1){
+  transform:translateY(9px) rotate(45deg);
+  background:linear-gradient(90deg,#8b5cf6,#3b82f6);
+}
+
+.hamburger.active span:nth-child(2){
+  opacity:0;
+  transform:scaleX(0);
+}
+
+.hamburger.active span:nth-child(3){
+  transform:translateY(-9px) rotate(-45deg);
+  background:linear-gradient(90deg,#8b5cf6,#3b82f6);
+}
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu{
+  position:fixed;
+  top:0;
+  right:0;
+  width:100%;
+  height:100vh;
+  background:rgba(5,5,16,0.97);
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  z-index:99;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:1rem;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.4s ease;
+}
+
+.mobile-menu.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.mobile-menu a{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:1.75rem;
+  font-weight:500;
+  color:var(--text-primary);
+  text-decoration:none;
+  opacity:0;
+  transform:translateY(20px);
+  transition:color 0.3s ease;
+  padding:0.75rem 2rem;
+  border-radius:12px;
+  width:80%;
+  text-align:center;
+}
+
+.mobile-menu a:hover{
+  color:var(--accent-purple);
+  background:rgba(139,92,246,0.08);
+}
+
+.mobile-menu.active a{
+  animation:mobileLinkIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.mobile-menu.active a:nth-child(1){animation-delay:0.1s}
+.mobile-menu.active a:nth-child(2){animation-delay:0.15s}
+.mobile-menu.active a:nth-child(3){animation-delay:0.2s}
+.mobile-menu.active a:nth-child(4){animation-delay:0.25s}
+.mobile-menu.active a:nth-child(5){animation-delay:0.3s}
+.mobile-menu.active a:nth-child(6){animation-delay:0.35s}
+
+@keyframes mobileLinkIn{
+  to{opacity:1;transform:translateY(0)}
+}
+
+.mobile-menu .btn{
+  margin-top:1.5rem;
+  opacity:0;
+  transform:translateY(20px);
+  animation:mobileLinkIn 0.5s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+}
+
+/* ===== HERO ===== */
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  padding:8rem 0 4rem;
+}
+
+.hero-canvas{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 1.5rem;
+  width:100%;
+}
+
+@media(min-width:768px){
+  .hero-content{padding:0 3rem}
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.5rem 1rem;
+  border-radius:100px;
+  background:rgba(139,92,246,0.08);
+  border:1px solid rgba(139,92,246,0.2);
+  font-size:0.8rem;
+  font-weight:500;
+  color:var(--text-secondary);
+  letter-spacing:0.03em;
+  text-transform:uppercase;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.badge-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#8b5cf6;
+  animation:badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(139,92,246,0.5)}
+  50%{opacity:0.7;box-shadow:0 0 0 8px rgba(139,92,246,0)}
+}
+
+.hero h1{
+  font-size:clamp(2.5rem,7vw,5.5rem);
+  font-weight:700;
+  margin:1.5rem 0;
+  letter-spacing:-0.03em;
+  line-height:1.05;
+}
+
+.hero h1 .line{
+  display:block;
+  overflow:hidden;
+}
+
+.hero h1 .line-inner{
+  display:inline-block;
+}
+
+.hero-subtitle{
+  font-size:clamp(1rem,2vw,1.25rem);
+  color:var(--text-secondary);
+  max-width:560px;
+  margin-bottom:2.5rem;
+  line-height:1.7;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+
+.hero-stats{
+  display:flex;
+  gap:3rem;
+  margin-top:4rem;
+  flex-wrap:wrap;
+}
+
+.hero-stat{
+  position:relative;
+}
+
+.hero-stat-num{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:2rem;
+  font-weight:700;
+  background:linear-gradient(135deg,#8b5cf6,#3b82f6);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero-stat-label{
+  font-size:0.8rem;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  margin-top:0.25rem;
+}
+
+/* Hero initial load animation */
+.hero-content > *{
+  opacity:0;
+  transform:translateY(30px);
+}
+
+body.loaded .hero-content > *{
+  animation:heroFadeIn 1s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+body.loaded .hero-content > *:nth-child(1){animation-delay:0.15s}
+body.loaded .hero-content > *:nth-child(2){animation-delay:0.3s}
+body.loaded .hero-content > *:nth-child(3){animation-delay:0.45s}
+body.loaded .hero-content > *:nth-child(4){animation-delay:0.6s}
+body.loaded .hero-content > *:nth-child(5){animation-delay:0.75s}
+
+@keyframes heroFadeIn{
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ===== SECTION HEADERS ===== */
+.section-header{
+  text-align:center;
+  max-width:720px;
+  margin:0 auto 4rem;
+}
+
+.section-label{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  font-size:0.8rem;
+  font-weight:500;
+  color:var(--accent-purple);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  margin-bottom:1rem;
+}
+
+.section-title{
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:700;
+  letter-spacing:-0.03em;
+  line-height:1.1;
+  margin-bottom:1.25rem;
+}
+
+.section-subtitle{
+  font-size:1.05rem;
+  color:var(--text-secondary);
+  line-height:1.7;
+}
+
+/* ===== SOLUTIONS ===== */
+.solutions{
+  padding:8rem 0;
+  position:relative;
+}
+
+.solutions-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.5rem;
+}
+
+.solution-card{
+  position:relative;
+  padding:2rem;
+  border-radius:var(--radius);
+  background:rgba(15,15,42,0.4);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(139,92,246,0.1);
+  overflow:hidden;
+  transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+  cursor:pointer;
+  transform-style:preserve-3d;
+  min-height:280px;
+  display:flex;
+  flex-direction:column;
+}
+
+.solution-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(139,92,246,0.12) 0%,transparent 50%);
+  opacity:0;
+  transition:opacity 0.4s ease;
+  pointer-events:none;
+}
+
+.solution-card:hover{
+  border-color:rgba(139,92,246,0.3);
+  transform:translateY(-6px);
+  box-shadow:0 20px 50px rgba(0,0,0,0.4),0 0 30px rgba(139,92,246,0.1);
+}
+
+.solution-card:hover::before{opacity:1}
+
+.solution-icon{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(59,130,246,0.1));
+  border:1px solid rgba(139,92,246,0.2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:1.5rem;
+  transition:all 0.4s ease;
+}
+
+.solution-card:hover .solution-icon{
+  background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(59,130,246,0.2));
+  border-color:rgba(139,92,246,0.4);
+  transform:scale(1.05);
+}
+
+.solution-icon svg{
+  width:24px;
+  height:24px;
+  stroke:url(#sol-grad);
+  fill:none;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.solution-title{
+  font-size:1.25rem;
+  font-weight:600;
+  margin-bottom:0.625rem;
+  color:var(--text-primary);
+}
+
+.solution-desc{
+  font-size:0.9rem;
+  color:var(--text-secondary);
+  line-height:1.6;
+  flex:1;
+}
+
+.solution-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:0.375rem;
+  margin-top:1.25rem;
+  font-size:0.85rem;
+  font-weight:500;
+  color:var(--accent-purple);
+  opacity:0;
+  transform:translateY(8px);
+  transition:all 0.4s ease;
+}
+
+.solution-card:hover .solution-cta{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.solution-cta svg{
+  width:14px;
+  height:14px;
+  transition:transform 0.3s ease;
+}
+
+.solution-card:hover .solution-cta svg{transform:translateX(3px)}
+
+/* ===== SERVICES BENTO ===== */
+.services{
+  padding:8rem 0;
+  position:relative;
+}
+
+.bento-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1rem;
+}
+
+@media(min-width:640px){
+  .bento-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(min-width:1024px){
+  .bento-grid{
+    grid-template-columns:repeat(4,1fr);
+    grid-auto-rows:minmax(170px,auto);
+  }
+  .bento-large{grid-column:span 2;grid-row:span 2}
+  .bento-tall{grid-row:span 2}
+  .bento-wide{grid-column:span 2}
+}
+
+.bento-item{
+  position:relative;
+  padding:1.75rem;
+  border-radius:var(--radius);
+  background:rgba(15,15,42,0.4);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(139,92,246,0.1);
+  overflow:hidden;
+  transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.bento-item:hover{
+  border-color:rgba(139,92,246,0.25);
+  background:rgba(15,15,42,0.6);
+  transform:translateY(-4px);
+}
+
+.bento-large{
+  background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(59,130,246,0.06));
+  border-color:rgba(139,92,246,0.2);
+}
+
+.bento-large:hover{
+  background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(59,130,246,0.1));
+}
+
+.bento-icon{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background:rgba(139,92,246,0.1);
+  border:1px solid rgba(139,92,246,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:1rem;
+}
+
+.bento-icon svg{
+  width:20px;
+  height:20px;
+  stroke:#a855f7;
+  fill:none;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.bento-title{
+  font-size:1.1rem;
+  font-weight:600;
+  margin-bottom:0.5rem;
+}
+
+.bento-large .bento-title{font-size:1.5rem}
+
+.bento-desc{
+  font-size:0.875rem;
+  color:var(--text-secondary);
+  line-height:1.5;
+}
+
+.bento-decoration{
+  position:absolute;
+  bottom:-20px;
+  right:-20px;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.1),transparent 70%);
+  pointer-events:none;
+}
+
+/* ===== PROCESS ===== */
+.process{
+  padding:8rem 0;
+  position:relative;
+}
+
+.process-container{
+  max-width:1000px;
+  margin:0 auto;
+  position:relative;
+}
+
+.process-line{
+  position:absolute;
+  left:50%;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:rgba(139,92,246,0.1);
+  transform:translateX(-50%);
+  z-index:0;
+}
+
+.process-line-fill{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:0%;
+  background:linear-gradient(180deg,#8b5cf6,#3b82f6);
+  box-shadow:0 0 15px rgba(139,92,246,0.5);
+  transition:height 0.1s linear;
+}
+
+.process-steps{
+  display:flex;
+  flex-direction:column;
+  gap:4rem;
+  position:relative;
+  z-index:1;
+}
+
+.process-step{
+  display:flex;
+  align-items:center;
+  gap:2rem;
+  opacity:0.3;
+  transition:opacity 0.6s ease;
+}
+
+.process-step.active{opacity:1}
+
+.process-step:nth-child(even){
+  flex-direction:row-reverse;
+}
+
+.process-step:nth-child(even) .process-step-content{
+  text-align:right;
+}
+
+.process-step-number{
+  flex-shrink:0;
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:rgba(15,15,42,0.8);
+  border:2px solid rgba(139,92,246,0.2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:1.25rem;
+  font-weight:600;
+  color:var(--text-muted);
+  transition:all 0.5s ease;
+  position:relative;
+  z-index:2;
+  backdrop-filter:blur(10px);
+}
+
+.process-step.active .process-step-number{
+  border-color:#8b5cf6;
+  color:#fff;
+  background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(59,130,246,0.2));
+  box-shadow:0 0 30px rgba(139,92,246,0.4);
+}
+
+.process-step-content{
+  flex:1;
+  max-width:380px;
+}
+
+.process-step-title{
+  font-size:1.35rem;
+  font-weight:600;
+  margin-bottom:0.5rem;
+}
+
+.process-step-desc{
+  font-size:0.95rem;
+  color:var(--text-secondary);
+  line-height:1.6;
+}
+
+@media(max-width:768px){
+  .process-line{left:32px}
+  .process-step,.process-step:nth-child(even){
+    flex-direction:row;
+  }
+  .process-step:nth-child(even) .process-step-content{text-align:left}
+  .process-step-content{max-width:none}
+}
+
+/* ===== PORTFOLIO ===== */
+.portfolio{
+  padding:8rem 0;
+  position:relative;
+}
+
+.portfolio-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1.5rem;
+}
+
+@media(min-width:768px){
+  .portfolio-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+.portfolio-card{
+  position:relative;
+  border-radius:var(--radius);
+  overflow:hidden;
+  aspect-ratio:16/10;
+  cursor:pointer;
+  background:var(--bg-tertiary);
+}
+
+.portfolio-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  filter:brightness(0.7) saturate(1.1);
+}
+
+.portfolio-card:hover img{
+  transform:scale(1.06);
+  filter:brightness(0.5) saturate(1.2);
+}
+
+.portfolio-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top,rgba(5,5,16,0.95) 0%,rgba(5,5,16,0.3) 50%,transparent 100%);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:2rem;
+}
+
+.portfolio-category{
+  font-size:0.75rem;
+  font-weight:500;
+  color:var(--accent-purple);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  margin-bottom:0.5rem;
+}
+
+.portfolio-title{
+  font-size:1.5rem;
+  font-weight:600;
+  margin-bottom:0.5rem;
+}
+
+.portfolio-desc{
+  font-size:0.9rem;
+  color:var(--text-secondary);
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+
+.portfolio-card:hover .portfolio-desc{
+  max-height:100px;
+  opacity:1;
+  margin-top:0.5rem;
+}
+
+.portfolio-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.375rem;
+  margin-top:1rem;
+  font-size:0.85rem;
+  font-weight:500;
+  color:var(--text-primary);
+  opacity:0;
+  transform:translateY(10px);
+  transition:all 0.4s ease;
+}
+
+.portfolio-card:hover .portfolio-btn{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.portfolio-btn svg{
+  width:14px;
+  height:14px;
+  transition:transform 0.3s ease;
+}
+
+.portfolio-card:hover .portfolio-btn svg{transform:translateX(3px)}
+
+/* ===== ABOUT ===== */
+.about{
+  padding:8rem 0;
+  position:relative;
+}
+
+.about-container{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:4rem;
+  align-items:center;
+}
+
+@media(min-width:768px){
+  .about-container{grid-template-columns:1fr 1fr}
+}
+
+.about-image-wrap{
+  position:relative;
+  border-radius:var(--radius);
+  overflow:hidden;
+  aspect-ratio:4/5;
+}
+
+.about-image-wrap img{
+  width:100%;
+  height:120%;
+  object-fit:cover;
+  filter:brightness(0.6) saturate(1.1);
+  will-change:transform;
+}
+
+.about-image-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.1));
+  mix-blend-mode:overlay;
+}
+
+.about-image-border{
+  position:absolute;
+  inset:0;
+  border:1px solid rgba(139,92,246,0.2);
+  border-radius:var(--radius);
+  pointer-events:none;
+}
+
+.about-text h2{
+  font-size:clamp(1.75rem,4vw,2.75rem);
+  font-weight:700;
+  line-height:1.2;
+  margin-bottom:1.5rem;
+  letter-spacing:-0.03em;
+}
+
+.about-text p{
+  font-size:1.05rem;
+  color:var(--text-secondary);
+  line-height:1.8;
+  margin-bottom:1.25rem;
+}
+
+.about-values{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1.5rem;
+  margin-top:2.5rem;
+}
+
+.about-value{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+
+.about-value-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#8b5cf6,#3b82f6);
+  flex-shrink:0;
+  box-shadow:0 0 10px rgba(139,92,246,0.4);
+}
+
+.about-value-text{
+  font-size:0.9rem;
+  font-weight:500;
+  color:var(--text-primary);
+}
+
+/* ===== CTA ===== */
+.cta{
+  padding:6rem 0;
+  position:relative;
+}
+
+.cta-container{
+  max-width:900px;
+  margin:0 auto;
+  text-align:center;
+  padding:4rem 2rem;
+  border-radius:24px;
+  background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(59,130,246,0.05));
+  border:1px solid rgba(139,92,246,0.15);
+  position:relative;
+  overflow:hidden;
+}
+
+.cta-container::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle,rgba(139,92,246,0.08) 0%,transparent 50%);
+  animation:ctaGlow 8s ease-in-out infinite;
+}
+
+@keyframes ctaGlow{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(20%,20%)}
+}
+
+.cta h2{
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:700;
+  margin-bottom:1.25rem;
+  position:relative;
+}
+
+.cta p{
+  font-size:1.1rem;
+  color:var(--text-secondary);
+  margin-bottom:2rem;
+  position:relative;
+}
+
+.cta .btn{position:relative}
+
+/* ===== FOOTER ===== */
+.footer{
+  padding:4rem 0 2rem;
+  border-top:1px solid rgba(139,92,246,0.1);
+  position:relative;
+  z-index:3;
+}
+
+.footer-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:3rem;
+  margin-bottom:3rem;
+}
+
+@media(min-width:768px){
+  .footer-grid{grid-template-columns:2fr 1fr 1fr}
+}
+
+.footer-brand p{
+  font-size:0.9rem;
+  color:var(--text-secondary);
+  margin-top:1rem;
+  max-width:320px;
+  line-height:1.6;
+}
+
+.footer-col h4{
+  font-size:0.8rem;
+  font-weight:600;
+  color:var(--text-primary);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  margin-bottom:1.25rem;
+}
+
+.footer-col a{
+  display:block;
+  font-size:0.9rem;
+  color:var(--text-secondary);
+  text-decoration:none;
+  margin-bottom:0.625rem;
+  transition:color 0.3s ease;
+}
+
+.footer-col a:hover{color:var(--accent-purple)}
+
+.footer-bottom{
+  padding-top:2rem;
+  border-top:1px solid rgba(139,92,246,0.08);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+
+.footer-bottom p{
+  font-size:0.85rem;
+  color:var(--text-muted);
+}
+
+.footer-social{
+  display:flex;
+  gap:1rem;
+}
+
+.footer-social a{
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  background:rgba(15,15,42,0.5);
+  border:1px solid rgba(139,92,246,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.3s ease;
+}
+
+.footer-social a:hover{
+  background:rgba(139,92,246,0.1);
+  border-color:rgba(139,92,246,0.3);
+  transform:translateY(-2px);
+}
+
+.footer-social svg{
+  width:18px;
+  height:18px;
+  stroke:var(--text-secondary);
+  fill:none;
+  stroke-width:1.5;
+}
+
+.footer-social a:hover svg{stroke:var(--accent-purple)}
+
+/* ===== FLOATING WHATSAPP ===== */
+.whatsapp-float{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:#25D366;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+  box-shadow:0 4px 15px rgba(37,211,102,0.4);
+  transition:transform 0.3s ease,box-shadow 0.3s ease;
+  animation:waPulse 2.5s infinite;
+}
+
+.whatsapp-float:hover{
+  transform:scale(1.1) translateY(-2px);
+  box-shadow:0 6px 20px rgba(37,211,102,0.6);
+}
+
+.whatsapp-float svg{
+  width:32px;
+  height:32px;
+  fill:#fff;
+}
+
+@keyframes waPulse{
+  0%{box-shadow:0 0 0 0 rgba(37,211,102,0.5)}
+  70%{box-shadow:0 0 0 15px rgba(37,211,102,0)}
+  100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}
+}
+
+/* ===== RESPONSIVE NAV ===== */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .nav-cta-desktop{display:none}
+  .hamburger{display:flex}
+}
+
+@media(min-width:901px){
+  .nav-cta-mobile{display:none}
+}
+
+/* ===== REDUCED MOTION ===== */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  .cursor-glow{display:none}
+  .whatsapp-float{animation:none}
+}
+
+/* ===== MOBILE OPTIMIZATIONS ===== */
+@media(max-width:768px){
+  .hero{padding:6rem 0 3rem}
+  .solutions,.services,.process,.portfolio,.about{padding:5rem 0}
+  .section-header{margin-bottom:3rem}
+  .hero-stats{gap:2rem;margin-top:3rem}
+  .hero-stat-num{font-size:1.5rem}
+  .solution-card{min-height:auto}
+  .about-values{gap:1rem}
+  .whatsapp-float{width:48px;height:48px;bottom:16px;right:16px}
+  .whatsapp-float svg{width:28px;height:28px}
+}
+
+@media(max-width:480px){
+  .container-x{padding:0 1.25rem}
+  .hero-buttons{flex-direction:column}
+  .hero-buttons .btn{width:100%;justify-content:center}
+}
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <h1><i class="fas fa-tasks"></i> Gestor de Tareas de Reasignación</h1>
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
-        <div id="saveNotification">
-            <i class="fas fa-save"></i> Datos guardados automáticamente.
-        </div>
+<!-- Cursor Glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
 
-        <div class="section">
-             <div class="section-header">
-                <h2><i class="fas fa-user-tag"></i> Designación de Tarea</h2>
-            </div>
-            <div class="section-content">
-                <div class="info-item">
-                    <strong>ACCIÓN:</strong>
-                    <span id="accion" class="copy-target" style="color: var(--danger-color);">Reasignar</span>
-                    <button class="copy-button" onclick="copiarTexto('accion')" style="background-color: var(--danger-color);"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
-                 <div class="info-item">
-                    <strong>NOMBRE DE DESTINO:</strong>
-                    <span id="reasignar" class="copy-target">BRAYAN CORONADO CUELLAR</span>
-                    <button class="copy-button" onclick="copiarTexto('reasignar')"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
-            </div>
-        </div>
+<!-- SVG Gradient Definitions -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="sol-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+</svg>
 
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="container-x">
+    <div class="navbar-inner">
+      <a href="#" class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#3b82f6"/>
+            </linearGradient>
+          </defs>
+          <path d="M28 10 Q28 6 22 6 Q12 6 12 14 Q12 20 20 22 Q28 24 28 30 Q28 36 22 36 Q14 36 12 32" 
+                stroke="url(#logoGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <circle cx="28" cy="10" r="2.5" fill="#a855f7"/>
+          <circle cx="12" cy="32" r="2.5" fill="#3b82f6"/>
+        </svg>
+        <span class="logo-text">Soft<span class="accent">koora</span></span>
+      </a>
 
-        <div class="section">
-            <div class="section-header">
-                <h2><i class="fas fa-clipboard-list"></i> Tarea Activa (Datos Principales)</h2>
-            </div>
-             <div class="section-content">
-                <p style="color: var(--secondary-color); font-size: 0.9em;">*El Radicado se actualiza automáticamente con el ID de la primera tarea pendiente.</p>
-                
-                <div class="info-item">
-                    <strong>RADICADO / ID ACTUAL:</strong>
-                    <input type="text" id="radicado" class="copy-target editable-input" value="3670450">
-                    <button class="copy-button" onclick="copiarTexto('radicado')"><i class="fas fa-copy"></i> Copiar Radicado</button>
-                </div>
-                <div class="info-item">
-                    <strong>INICIO MOVILIDAD (MV):</strong>
-                    <span id="mv" class="copy-target">Colombia2033*</span>
-                    <button class="copy-button" onclick="copiarTexto('mv')"><i class="fas fa-copy"></i> Copiar Clave MV</button>
-                </div>
-                <div class="info-item">
-                    <strong>CÓDIGO SUMINISTRO:</strong>
-                    <span id="suministro" class="copy-target">91010101</span>
-                    <button class="copy-button" onclick="copiarTexto('suministro')"><i class="fas fa-copy"></i> Copiar Código</button>
-                </div>
-             </div>
-        </div>
-        
-        
-        <div class="section" id="tareas-pendientes-section">
-            <div class="section-header">
-                <h2><i class="fas fa-list-alt"></i> Tareas Pendientes y Gestión</h2>
-                <button onclick="toggleSection('tareas-pendientes-content', this)"><i class="fas fa-angle-up"></i> Ver Menos</button>
-            </div>
-            
-            <div class="section-content" id="tareas-pendientes-content">
-                <p style="color: var(--secondary-color);">**Instrucción:** Pega el listado de liquidaciones aquí y haz clic en Construir Lista.</p>
-                
-                <textarea id="dataInput" placeholder="Pega aquí los datos de Excel (cada liquidación en una línea nueva)...
-Ejemplo:
-Asignado Liquidacion 242385169 900190045 $ 28.700 $ 0 Nueva EPS 1
-Asignado Liquidacion 242385633 900190045 $ 28.700 $ 0 Nueva EPS 1"></textarea>
-                
-                <button id="generateButton" onclick="generarTablaPersonalizada()"><i class="fas fa-cogs"></i> Construir Lista de Tareas</button>
-                <button id="showHistoryButton" class="copy-button" onclick="mostrarHistorial()"><i class="fas fa-history"></i> Ver Historial</button>
+      <ul class="nav-links">
+        <li><a href="#soluciones" class="nav-link">Soluciones</a></li>
+        <li><a href="#servicios" class="nav-link">Servicios</a></li>
+        <li><a href="#proceso" class="nav-link">Proceso</a></li>
+        <li><a href="#portafolio" class="nav-link">Portafolio</a></li>
+        <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+      </ul>
 
-                <div id="dynamicTableOutput">
-                    <p style="text-align: center; color: var(--secondary-color); padding: 10px; border: 1px dashed #ccc; border-radius: 5px;">*La lista de tareas pendientes aparecerá aquí.*</p>
-                </div>
-                
-                <div id="copyAllIdsContainer" class="info-item" style="display:none; margin-top: 20px; border: none; padding-bottom: 0;">
-                    <span id="generated-ids-copia-manual" class="copy-target" style="display: none;"></span>
-                    <button id="copyAllIdsButton" class="copy-button" onclick="copiarTexto('generated-ids-copia-manual')" style="background-color: var(--success-color); flex-grow: 1;"><i class="fas fa-paste"></i> Copiar TODOS los IDs restantes</button>
-                </div>
-            </div>
-        </div>
+      <div class="nav-cta-desktop">
+        <a href="https://wa.me/573008556516?text=Hola%20👋%20Vi%20la%20p%C3%A1gina%20de%20Softkoora.%20Tengo%20una%20idea%20o%20problema%20en%20mi%20negocio%20y%20quisiera%20saber%20si%20pueden%20ayudarme." target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <span>Iniciar proyecto</span>
+          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
 
-        
-        <div class="section" id="historySection">
-            <div class="section-header">
-                <h2><i class="fas fa-archive"></i> Historial de Tareas Completadas</h2>
-                <button onclick="toggleSection('historyOutput', this)"><i class="fas fa-angle-down"></i> Ver Más</button>
-            </div>
-            <div class="section-content" id="historyOutput" style="display:none;">
-                <div class="history-actions">
-                    <button id="deleteAllHistoryButton" onclick="eliminarHistorialCompleto()"><i class="fas fa-trash-alt"></i> Eliminar Historial Completo</button>
-                    <p style="color: var(--secondary-color);">*El historial se carga automáticamente al iniciar la web si hay datos guardados.</p>
-                </div>
-                 <div id="historyTableContainer">
-                    <p style="color: var(--secondary-color); text-align: center; padding: 10px; border: 1px dashed #ccc; border-radius: 5px;">No hay tareas archivadas. Utilice el botón "Ver Historial" en la sección superior.</p>
-                 </div>
-            </div>
-        </div>
-        
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</nav>
 
-        <div class="section" id="accesos-credenciales-section">
-            <div class="section-header">
-                <h2><i class="fas fa-key"></i> Accesos y Credenciales</h2>
-                <button onclick="toggleSection('accesos-credenciales-content', this)"><i class="fas fa-angle-down"></i> Ver Más</button>
-            </div>
-            
-            <div class="section-content" id="accesos-credenciales-content" style="display:none;">
-                
-                <h3><i class="fas fa-user-lock"></i> ONBASE</h3>
-                <div class="info-item">
-                    <strong>URL:</strong>
-                    <a id="onbaseURL" class="copy-target" href="https://ecm.nuevaeps.com.co/OnBase/Login.aspx" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">https://ecm.nuevaeps.com.co/OnBase/Login.aspx</a>
-                    <button class="copy-button" onclick="copiarTexto('onbaseURL')"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
-                <div class="info-item">
-                    <strong>USUARIO:</strong>
-                    <span id="onbaseUser" class="copy-target">mgamas</span>
-                    <button class="copy-button" onclick="copiarTexto('onbaseUser')"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
-                <div class="info-item">
-                    <strong>CLAVE:</strong>
-                    <span id="onbasePass" class="copy-target">Colombia2029*</span>
-                    <button class="copy-button" onclick="copiarTexto('onbasePass')"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
+<!-- ===== MOBILE MENU ===== -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#soluciones">Soluciones</a>
+  <a href="#servicios">Servicios</a>
+  <a href="#proceso">Proceso</a>
+  <a href="#portafolio">Portafolio</a>
+  <a href="#nosotros">Nosotros</a>
+  <a href="https://wa.me/573008556516?text=Hola%20👋%20Vi%20la%20p%C3%A1gina%20de%20Softkoora.%20Tengo%20una%20idea%20o%20problema%20en%20mi%20negocio%20y%20quisiera%20saber%20si%20pueden%20ayudarme." target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="margin-top:1.5rem">
+    <span>Iniciar proyecto</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </a>
+</div>
 
-                <br>
-                
-                <h3><i class="fas fa-desktop"></i> AUP</h3>
-                <div class="info-item">
-                    <strong>URL:</strong>
-                    <a id="aupURL" class="copy-target" href="https://aup.procesosyservicios.net.co/Login.aspx" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">https://aup.procesosyservicios.net.co/Login.aspx</a>
-                    <button class="copy-button" onclick="copiarTexto('aupURL')"><i class="fas fa-copy"></i> Copiar URL</button>
-                </div>
-                
-                <br>
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  
+  <div class="ambient-orb" style="width:500px;height:500px;background:rgba(139,92,246,0.15);top:-100px;left:-100px;"></div>
+  <div class="ambient-orb" style="width:400px;height:400px;background:rgba(59,130,246,0.1);bottom:-50px;right:-50px;"></div>
 
-                <h3><i class="fas fa-hospital"></i> NUEVA EPS</h3>
-                <div class="info-item">
-                    <strong>USUARIO:</strong>
-                    <span id="nuevaepsUser" class="copy-target">Bcoronadoccmp</span>
-                    <button class="copy-button" onclick="copiarTexto('nuevaepsUser')"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
-                <div class="info-item">
-                    <strong>CLAVE:</strong>
-                    <span id="nuevaepsPass" class="copy-target">Pys2034*</span>
-                    <button class="copy-button" onclick="copiarTexto('nuevaepsPass')"><i class="fas fa-copy"></i> Copiar</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="section search-container">
-             <div class="section-header">
-                <h2><i class="fas fa-prescription-bottle-alt"></i> Buscador de Códigos de Medicamentos</h2>
-            </div>
-            <div class="section-content">
-                <p style="color: var(--secondary-color);">Escribe el nombre del medicamento para encontrar su código rápidamente. **Ahora se activa con solo 1 letra.**</p>
-                <input type="text" id="searchInput" placeholder="Ej: AMOXICILINA, LISINOPRIL..." onkeyup="buscarMedicamento()" class="copy-target">
-                <div id="searchResult"></div>
-            </div>
-        </div>
-
+  <div class="hero-content">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Soluciones Digitales Premium
     </div>
 
-    <script>
-        // --- VARIABLES GLOBALES Y ALMACENAMIENTO ---
-        let listaDeTareas = [];
-        let listaDeHistorial = [];
+    <h1>
+      <span class="line"><span class="line-inner reveal-text" data-reveal>Tu negocio tiene problemas.</span></span>
+      <span class="line"><span class="line-inner gradient-text reveal-text" data-reveal>Nosotros construimos las soluciones.</span></span>
+    </h1>
 
-        // Colores y utilidades
-        const var_success_color = getComputedStyle(document.documentElement).getPropertyValue('--success-color').trim();
-        const var_primary_color = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
-        const var_danger_color = getComputedStyle(document.documentElement).getPropertyValue('--danger-color').trim();
-        const var_toggle_color = getComputedStyle(document.documentElement).getPropertyValue('--toggle-color').trim();
+    <p class="hero-subtitle">
+      Softkoora diseña y construye software a medida: plataformas, sistemas y automatizaciones que resuelven problemas reales de tu negocio.
+    </p>
 
-        // ----------------------------------------------------
-        // --- GESTIÓN DE LOCALSTORAGE (AUTO-GUARDADO) ---
-        // ----------------------------------------------------
+    <div class="hero-buttons">
+      <a href="https://wa.me/573008556516?text=Hola%20👋%20Vi%20la%20p%C3%A1gina%20de%20Softkoora.%20Tengo%20una%20idea%20o%20problema%20en%20mi%20negocio%20y%20quisiera%20saber%20si%20pueden%20ayudarme." target="_blank" rel="noopener noreferrer" class="btn btn-primary magnetic-btn">
+        <span>Iniciar proyecto</span>
+        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      <a href="#soluciones" class="btn btn-secondary">Ver soluciones</a>
+    </div>
 
-        function guardarDatos() {
-            try {
-                localStorage.setItem('reasignacion_tareas', JSON.stringify(listaDeTareas));
-                localStorage.setItem('reasignacion_historial', JSON.stringify(listaDeHistorial));
-                mostrarNotificacionGuardado();
-            } catch (e) {
-                console.error("Error al guardar en LocalStorage:", e);
-            }
-        }
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">100%</div>
+        <div class="hero-stat-label">Personalizado</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">∞</div>
+        <div class="hero-stat-label">Posibilidades</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">24/7</div>
+        <div class="hero-stat-label">Soporte</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function cargarDatos() {
-            try {
-                const tareasGuardadas = localStorage.getItem('reasignacion_tareas');
-                const historialGuardado = localStorage.getItem('reasignacion_historial');
+<!-- ===== SOLUTIONS ===== -->
+<section class="solutions" id="soluciones">
+  <div class="ambient-orb" style="width:600px;height:600px;background:rgba(139,92,246,0.08);top:20%;left:-200px;"></div>
+  
+  <div class="container-x">
+    <div class="section-header">
+      <div class="section-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        Soluciones
+      </div>
+      <h2 class="section-title reveal-text" data-reveal>¿Qué quieres solucionar?</h2>
+      <p class="section-subtitle">Cada negocio tiene problemas diferentes. Nosotros construimos soluciones alrededor de ellos.</p>
+    </div>
 
-                if (tareasGuardadas) {
-                    listaDeTareas = JSON.parse(tareasGuardadas);
-                    actualizarTextareaConLista();
-                    renderizarTabla();
-                }
-                if (historialGuardado) {
-                    listaDeHistorial = JSON.parse(historialGuardado);
-                    renderizarHistorial(false); 
-                }
-            } catch (e) {
-                console.error("Error al cargar datos de LocalStorage:", e);
-            }
-        }
+    <div class="solutions-grid">
+      <!-- Solución 1 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3 class="solution-title">Página Web Profesional</h3>
+        <p class="solution-desc">Presencia digital que transmite autoridad y convierte visitantes en clientes. Diseño, desarrollo y optimización en un solo lugar.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
 
-        function mostrarNotificacionGuardado() {
-            const notif = document.getElementById('saveNotification');
-            notif.classList.add('show');
-            setTimeout(() => {
-                notif.classList.remove('show');
-            }, 2000);
-        }
+      <!-- Solución 2 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+        </div>
+        <h3 class="solution-title">Organización de Citas</h3>
+        <p class="solution-desc">Sistema completo de reservas y calendarización que elimina el caos manual. Tus clientes agendan, tú recibes todo organizado.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
 
-        // ----------------------------------------------------
-        // --- Funciones de Copia y Notificación ---
-        // ----------------------------------------------------
+      <!-- Solución 3 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <h3 class="solution-title">Automatización de Procesos</h3>
+        <p class="solution-desc">Conectamos tus herramientas y automatizamos tareas repetitivas. Menos trabajo manual, más resultados, menos errores.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
 
-        function copiarTexto(elementId) {
-             const targetElement = document.getElementById(elementId);
-             let textToCopy;
-             if (targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA') {
-                 textToCopy = targetElement.value;
-             } else {
-                 textToCopy = targetElement.textContent || targetElement.innerText;
-             }
-             copiarYNotificar(targetElement, textToCopy);
-        }
-        function copiarTextoTabla(cellElement) {
-             const textToCopy = cellElement.textContent || cellElement.innerText;
-             copiarYNotificar(cellElement, textToCopy, true);
-        }
+      <!-- Solución 4 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <h3 class="solution-title">Plataformas Personalizadas</h3>
+        <p class="solution-desc">Construimos la plataforma exacta que tu negocio necesita. Sin plantillas, sin compromisos, hecha desde cero para ti.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
 
-        function copiarYNotificar(targetElement, textToCopy, isTableCell = false) {
-             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textToCopy)
-                    .then(() => {
-                        mostrarNotificacion(targetElement, '✅ Copiado!', isTableCell);
-                    })
-                    .catch(err => {
-                        copiarTextoFallback(targetElement, textToCopy, isTableCell);
-                    });
-            } else {
-                copiarTextoFallback(targetElement, textToCopy, isTableCell);
-            }
-        }
+      <!-- Solución 5 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <h3 class="solution-title">Sistemas Internos</h3>
+        <p class="solution-desc">Herramientas internas que hacen tu equipo más eficiente. Dashboards, CRUDs, reportes y todo lo que necesites para gestionar.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
+
+      <!-- Solución 6 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <h3 class="solution-title">Integración con WhatsApp</h3>
+        <p class="solution-desc">Conecta WhatsApp con tus sistemas para atención automatizada, notificaciones y ventas. Donde tus clientes ya están.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
+
+      <!-- Solución 7 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3 class="solution-title">Experiencia de Clientes</h3>
+        <p class="solution-desc">Diseñamos recorridos digitales que sorprenden y fidelizan. Cada interacción cuenta, cada detalle importa.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
+
+      <!-- Solución 8 -->
+      <div class="solution-card tilt-card" data-tilt>
+        <div class="solution-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+        </div>
+        <h3 class="solution-title">Soluciones a Medida</h3>
+        <p class="solution-desc">¿Tienes un problema único? Lo analizamos, lo entendemos y construimos la solución exacta. Sin cajas, sin límites.</p>
+        <div class="solution-cta">
+          Saber más
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES ===== -->
+<section class="services" id="servicios">
+  <div class="ambient-orb" style="width:500px;height:500px;background:rgba(59,130,246,0.08);bottom:20%;right:-150px;"></div>
+  
+  <div class="container-x">
+    <div class="section-header">
+      <div class="section-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Servicios
+      </div>
+      <h2 class="section-title reveal-text" data-reveal>Lo que construimos para ti</h2>
+      <p class="section-subtitle">Servicios tecnológicos diseñados para impulsar tu negocio al siguiente nivel.</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento-item bento-large">
+        <div>
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3 class="bento-title">Desarrollo Web</h3>
+          <p class="bento-desc">Sitios y aplicaciones web rápidas, escalables y elegantes. Fromtend, backend y todo lo que hay entre medias. Construido con tecnologías modernas y mejores prácticas.</p>
+        </div>
+        <div class="bento-decoration"></div>
+      </div>
+
+      <div class="bento-item">
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3 class="bento-title">Sistemas Personalizados</h3>
+        <p class="bento-desc">Software hecho a la medida de tus procesos.</p>
+      </div>
+
+      <div class="bento-item">
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <h3 class="bento-title">Automatizaciones</h3>
+        <p class="bento-desc">Menos trabajo manual, más resultados.</p>
+      </div>
+
+      <div class="bento-item bento-tall">
+        <div>
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h3 class="bento-title">Sistemas de Citas</h3>
+          <p class="bento-desc">Reservas online automatizadas para tu negocio. Calendarios, recordatorios y confirmaciones en automático.</p>
+        </div>
+      </div>
+
+      <div class="bento-item">
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <h3 class="bento-title">Integraciones</h3>
+        <p class="bento-desc">Conectamos tus herramientas en un solo flujo.</p>
+      </div>
+
+      <div class="bento-item">
+        <div class="bento-icon">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3 class="bento-title">Plataformas Digitales</h3>
+        <p class="bento-desc">Lanzamos tu producto digital al mundo.</p>
+      </div>
+
+      <div class="bento-item bento-wide">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:2rem;">
+          <div>
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            </div>
+            <h3 class="bento-title">Soluciones a Medida</h3>
+            <p class="bento-desc">Si no existe, lo construimos. Analizamos tu problema y creamos la solución exacta.</p>
+          </div>
+          <div class="bento-decoration" style="position:relative;width:80px;height:80px;bottom:auto;right:auto;flex-shrink:0;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROCESS ===== -->
+<section class="process" id="proceso">
+  <div class="ambient-orb" style="width:400px;height:400px;background:rgba(139,92,246,0.06);top:30%;left:50%;transform:translateX(-50%);"></div>
+  
+  <div class="container-x">
+    <div class="section-header">
+      <div class="section-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Proceso
+      </div>
+      <h2 class="section-title reveal-text" data-reveal>Cómo trabajamos</h2>
+      <p class="section-subtitle">Un proceso claro y transparente, desde la primera conversación hasta el lanzamiento.</p>
+    </div>
+
+    <div class="process-container">
+      <div class="process-line">
+        <div class="process-line-fill" id="processLineFill"></div>
+      </div>
+
+      <div class="process-steps">
+        <div class="process-step" data-step="0">
+          <div class="process-step-number">01</div>
+          <div class="process-step-content">
+            <h3 class="process-step-title">Nos cuentas el problema</h3>
+            <p class="process-step-desc">Te escuchamos sin tecnicismos. Entendemos tu negocio, tus dolores y tus objetivos antes de proponer nada.</p>
+          </div>
+        </div>
+
+        <div class="process-step" data-step="1">
+          <div class="process-step-number">02</div>
+          <div class="process-step-content">
+            <h3 class="process-step-title">Diseñamos la solución</h3>
+            <p class="process-step-desc">Trazamos la arquitectura, definimos las tecnologías y creamos un plan claro. Sabes qué vas a recibir y cuándo.</p>
+          </div>
+        </div>
+
+        <div class="process-step" data-step="2">
+          <div class="process-step-number">03</div>
+          <div class="process-step-content">
+            <h3 class="process-step-title">La construimos</h3>
+            <p class="process-step-desc">Desarrollamos con estándares profesionales. Código limpio, probado y documentado. Vas viendo avances reales.</p>
+          </div>
+        </div>
+
+        <div class="process-step" data-step="3">
+          <div class="process-step-number">04</div>
+          <div class="process-step-content">
+            <h3 class="process-step-title">La ponemos en marcha</h3>
+            <p class="process-step-desc">Desplegamos, configuramos y te acompañamos en el inicio. Tu solución funciona y tu equipo sabe usarla.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PORTFOLIO ===== -->
+<section class="portfolio" id="portafolio">
+  <div class="container-x">
+    <div class="section-header">
+      <div class="section-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 7h.01M17 7h.01M7 17h.01M17 17h.01M12 12h.01"/></svg>
+        Portafolio
+      </div>
+      <h2 class="section-title reveal-text" data-reveal>Proyectos en construcción</h2>
+      <p class="section-subtitle">Una selección de lo que estamos construyendo. Pronto más casos reales aquí.</p>
+    </div>
+
+    <div class="portfolio-grid">
+      <div class="portfolio-card">
+        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&auto=format" alt="Dashboard analytics" loading="lazy">
+        <div class="portfolio-overlay">
+          <div class="portfolio-category">Plataforma Web</div>
+          <h3 class="portfolio-title">Sistema de Gestión Empresarial</h3>
+          <p class="portfolio-desc">Dashboard completo con métricas en tiempo real, gestión de usuarios y reportes automatizados.</p>
+          <div class="portfolio-btn">
+            Ver caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-card">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&auto=format" alt="Data analytics" loading="lazy">
+        <div class="portfolio-overlay">
+          <div class="portfolio-category">Automatización</div>
+          <h3 class="portfolio-title">Automatización de Reportes</h3>
+          <p class="portfolio-desc">Sistema que recopila, procesa y envía reportes automáticamente. Horas ahorradas cada semana.</p>
+          <div class="portfolio-btn">
+            Ver caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-card">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80&auto=format" alt="Mobile app" loading="lazy">
+        <div class="portfolio-overlay">
+          <div class="portfolio-category">Sistema de Citas</div>
+          <h3 class="portfolio-title">Plataforma de Reservas</h3>
+          <p class="portfolio-desc">Sistema completo de citas online con calendario, recordatorios por WhatsApp y panel de gestión.</p>
+          <div class="portfolio-btn">
+            Ver caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-card">
+        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80&auto=format" alt="Team meeting" loading="lazy">
+        <div class="portfolio-overlay">
+          <div class="portfolio-category">Integración</div>
+          <h3 class="portfolio-title">Conector WhatsApp Business</h3>
+          <p class="portfolio-desc">Integración que conecta WhatsApp con el CRM del cliente para atención automatizada y seguimiento.</p>
+          <div class="portfolio-btn">
+            Ver caso
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="nosotros">
+  <div class="ambient-orb" style="width:500px;height:500px;background:rgba(139,92,246,0.08);top:20%;right:-100px;"></div>
+  
+  <div class="container-x">
+    <div class="about-container">
+      <div class="about-image-wrap">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80&auto=format" alt="Equipo trabajando" loading="lazy" class="parallax-img" data-speed="0.3">
+        <div class="about-image-overlay"></div>
+        <div class="about-image-border"></div>
+      </div>
+
+      <div class="about-text">
+        <div class="section-label" style="margin-bottom:1rem;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+          Nosotros
+        </div>
+        <h2 class="reveal-text" data-reveal>Construimos software que importa</h2>
+        <p>Softkoora nació con una idea sencilla: la tecnología debe resolver problemas, no complicarlos.</p>
+        <p>Estamos construyendo esta empresa desde cero, proyecto por proyecto. Por eso cada cliente importa de verdad.</p>
+        <p>No buscamos ser la empresa más grande. Buscamos ser la empresa que construye las mejores soluciones.</p>
+
+        <div class="about-values">
+          <div class="about-value">
+            <div class="about-value-dot"></div>
+            <div class="about-value-text">Dedicación real</div>
+          </div>
+          <div class="about-value">
+            <div class="about-value-dot"></div>
+            <div class="about-value-text">Crecimiento continuo</div>
+          </div>
+          <div class="about-value">
+            <div class="about-value-dot"></div>
+            <div class="about-value-text">Cercanía total</div>
+          </div>
+          <div class="about-value">
+            <div class="about-value-dot"></div>
+            <div class="about-value-text">Visión a largo plazo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta" id="contacto">
+  <div class="container-x">
+    <div class="cta-container">
+      <h2 class="reveal-text" data-reveal>¿Listo para construir <span class="gradient-text">algo grande?</span></h2>
+      <p>Cuéntanos qué necesitas. Nosotros nos encargamos del resto.</p>
+      <a href="https://wa.me/573008556516?text=Hola%20👋%20Vi%20la%20p%C3%A1gina%20de%20Softkoora.%20Tengo%20una%20idea%20o%20problema%20en%20mi%20negocio%20y%20quisiera%20saber%20si%20pueden%20ayudarme." target="_blank" rel="noopener noreferrer" class="btn btn-primary magnetic-btn">
+        <span>Iniciar conversación</span>
+        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container-x">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+            <path d="M28 10 Q28 6 22 6 Q12 6 12 14 Q12 20 20 22 Q28 24 28 30 Q28 36 22 36 Q14 36 12 32" 
+                  stroke="url(#logoGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+            <circle cx="28" cy="10" r="2.5" fill="#a855f7"/>
+            <circle cx="12" cy="32" r="2.5" fill="#3b82f6"/>
+          </svg>
+          <span class="logo-text">Soft<span class="accent">koora</span></span>
+        </a>
+        <p>Soluciones digitales premium construidas alrededor de los problemas reales de tu negocio.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <a href="#soluciones">Soluciones</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#proceso">Proceso</a>
+        <a href="#portafolio">Portafolio</a>
+        <a href="#nosotros">Nosotros</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="https://wa.me/573008556516?text=Hola%20👋%20Vi%20la%20p%C3%A1gina%20de%20Softkoora.%20Tengo%20una%20idea%20o%20problema%20en%20mi%20negocio%20y%20quisiera%20saber%20si%20pueden%20ayudarme." target="_blank" rel="noopener noreferrer">WhatsApp: +57 300 855 6516</a>
+        <a href="https://wa.me/573008556516?text=Hola%20👋%20Vi%20la%20p%C3%A1gina%20de%20Softkoora.%20Tengo%20una%20idea%20o%20problema%20en%20mi%20negocio%20y%20quisiera%20saber%20si%20pueden%20ayudarme." target="_blank" rel="noopener noreferrer">Iniciar proyecto</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Softkoora. Todos los derechos reservados.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" aria-label="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== FLOATING WHATSAPP ===== -->
+<a href="https://wa.me/573008556516?text=Hola%20👋%20Vi%20la%20p%C3%A1gina%20de%20Softkoora.%20Tengo%20una%20idea%20o%20problema%20en%20mi%20negocio%20y%20quisiera%20saber%20si%20pueden%20ayudarme." target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script type="module">
+import * as THREE from 'three';
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
+const hasHover = window.matchMedia('(hover: hover)').matches;
+
+// ===== REGISTER GSAP =====
+gsap.registerPlugin(ScrollTrigger);
+
+// ===== SCROLL PROGRESS =====
+const scrollProgress = document.getElementById('scrollProgress');
+function updateScrollProgress() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const percent = (scrollTop / docHeight) * 100;
+  scrollProgress.style.width = percent + '%';
+}
+window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+// ===== CURSOR GLOW =====
+if (hasHover && !prefersReducedMotion) {
+  const cursorGlow = document.getElementById('cursorGlow');
+  let mouseX = 0, mouseY = 0;
+  let glowX = 0, glowY = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+  
+  function animateCursor() {
+    glowX += (mouseX - glowX) * 0.1;
+    glowY += (mouseY - glowY) * 0.1;
+    cursorGlow.style.transform = `translate(${glowX}px, ${glowY}px) translate(-50%, -50%)`;
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  
+  document.addEventListener('mouseleave', () => cursorGlow.style.opacity = '0');
+  document.addEventListener('mouseenter', () => cursorGlow.style.opacity = '1');
+}
+
+// ===== NAVBAR SCROLL =====
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+}, { passive: true });
+
+// ===== MOBILE MENU =====
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  hamburger.classList.toggle('active', menuOpen);
+  mobileMenu.classList.toggle('active', menuOpen);
+  document.body.style.overflow = menuOpen ? 'hidden' : '';
+}
+
+hamburger.addEventListener('click', toggleMenu);
+
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    // Check if it's an anchor link to a section
+    const href = link.getAttribute('href');
+    if (href.startsWith('#')) {
+      if (menuOpen) {
+        setTimeout(toggleMenu, 100);
+      }
+    }
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && menuOpen) toggleMenu();
+});
+
+// ===== SMOOTH ANCHOR SCROLL =====
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    const href = link.getAttribute('href');
+    if (href === '#' || href === '') return;
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      const offset = 80;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+
+// ===== TEXT REVEAL =====
+function initTextReveal() {
+  document.querySelectorAll('[data-reveal]').forEach(el => {
+    const text = el.textContent;
+    const words = text.split(' ');
+    el.innerHTML = words.map(w => 
+      `<span class="reveal-word"><span class="reveal-inner">${w}</span></span>`
+    ).join(' ');
+    
+    const inners = el.querySelectorAll('.reveal-inner');
+    
+    gsap.from(inners, {
+      yPercent: 100,
+      opacity: 0,
+      filter: 'blur(8px)',
+      duration: 0.9,
+      stagger: 0.04,
+      ease: 'power4.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+}
+
+// ===== SECTION REVEALS =====
+function initSectionReveals() {
+  gsap.utils.toArray('.solution-card').forEach((card, i) => {
+    gsap.from(card, {
+      y: 60,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: i * 0.05,
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 88%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+  
+  gsap.utils.toArray('.bento-item').forEach((item, i) => {
+    gsap.from(item, {
+      y: 50,
+      opacity: 0,
+      scale: 0.95,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: i * 0.08,
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 88%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+  
+  gsap.utils.toArray('.portfolio-card').forEach((card, i) => {
+    gsap.from(card, {
+      y: 60,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: i * 0.1,
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+  
+  gsap.from('.about-image-wrap', {
+    x: -60,
+    opacity: 0,
+    duration: 1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.about',
+      start: 'top 70%',
+      toggleActions: 'play none none none'
+    }
+  });
+  
+  gsap.from('.about-text > *:not(.section-label)', {
+    y: 30,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.about-text',
+      start: 'top 75%',
+      toggleActions: 'play none none none'
+    }
+  });
+  
+  gsap.from('.about-values > *', {
+    y: 20,
+    opacity: 0,
+    duration: 0.6,
+    stagger: 0.08,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.about-values',
+      start: 'top 85%',
+      toggleActions: 'play none none none'
+    }
+  });
+  
+  gsap.from('.hero-stats > *', {
+    y: 20,
+    opacity: 0,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'power3.out',
+    delay: 0.8,
+    scrollTrigger: {
+      trigger: '.hero-stats',
+      start: 'top 90%',
+      toggleActions: 'play none none none'
+    }
+  });
+}
+
+// ===== TILT CARDS =====
+if (hasHover && !prefersReducedMotion) {
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      const tiltX = (y - 0.5) * 6;
+      const tiltY = (x - 0.5) * -6;
+      card.style.transform = `translateY(-6px) perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+      card.style.setProperty('--mx', `${x * 100}%`);
+      card.style.setProperty('--my', `${y * 100}%`);
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+}
+
+// ===== MAGNETIC BUTTONS =====
+if (hasHover && !prefersReducedMotion) {
+  document.querySelectorAll('.magnetic-btn').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.15}px, ${y * 0.2}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
+    });
+  });
+}
+
+// ===== PARALLAX =====
+if (!prefersReducedMotion) {
+  document.querySelectorAll('.parallax-img').forEach(img => {
+    gsap.to(img, {
+      yPercent: -15,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: img.parentElement,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1
+      }
+    });
+  });
+  
+  // Parallax for ambient orbs
+  gsap.utils.toArray('.ambient-orb').forEach((orb, i) => {
+    gsap.to(orb, {
+      yPercent: i % 2 === 0 ? 20 : -20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: orb.parentElement,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 2
+      }
+    });
+  });
+}
+
+// ===== PROCESS TIMELINE =====
+function initProcessTimeline() {
+  const processSection = document.querySelector('.process');
+  const lineFill = document.getElementById('processLineFill');
+  const steps = document.querySelectorAll('.process-step');
+  
+  if (!processSection || !lineFill) return;
+  
+  ScrollTrigger.create({
+    trigger: processSection,
+    start: 'top 50%',
+    end: 'bottom 50%',
+    onUpdate: (self) => {
+      lineFill.style.height = (self.progress * 100) + '%';
+    }
+  });
+  
+  steps.forEach((step, i) => {
+    ScrollTrigger.create({
+      trigger: step,
+      start: 'top 65%',
+      end: 'bottom 35%',
+      onEnter: () => step.classList.add('active'),
+      onEnterBack: () => step.classList.add('active'),
+      onLeave: () => {
+        if (i < steps.length - 1) step.classList.remove('active');
+      },
+      onLeaveBack: () => {
+        if (i > 0) step.classList.remove('active');
+      }
+    });
+  });
+}
+
+// ===== THREE.JS HERO SCENE =====
+function initHero3D() {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  
+  let scene, camera, renderer, nodes, lines;
+  let mouseX = 0, mouseY = 0;
+  let targetRotX = 0, targetRotY = 0;
+  let animationId;
+  let isVisible = true;
+  
+  const nodeCount = isMobile ? 50 : 90;
+  const radius = 2.2;
+  
+  function init() {
+    scene = new THREE.Scene();
+    
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    
+    camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
+    camera.position.z = 5.5;
+    
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Create circular point texture
+    const texCanvas = document.createElement('canvas');
+    texCanvas.width = 64;
+    texCanvas.height = 64;
+    const ctx = texCanvas.getContext('2d');
+    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(168, 85, 247, 1)');
+    grad.addColorStop(0.3, 'rgba(139, 92, 246, 0.8)');
+    grad.addColorStop(0.6, 'rgba(59, 130, 246, 0.3)');
+    grad.addColorStop(1, 'rgba(59, 130, 246, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+    const texture = new THREE.CanvasTexture(texCanvas);
+    
+    // Node positions
+    const positions = new Float32Array(nodeCount * 3);
+    const colors = new Float32Array(nodeCount * 3);
+    
+    for (let i = 0; i < nodeCount; i++) {
+      // Distribute on a sphere
+      const phi = Math.acos(-1 + (2 * i) / nodeCount);
+      const theta = Math.sqrt(nodeCount * Math.PI) * phi;
+      
+      positions[i * 3] = radius * Math.cos(theta) * Math.sin(phi);
+      positions[i * 3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
+      positions[i * 3 + 2] = radius * Math.cos(phi);
+      
+      // Alternate colors between purple and blue
+      const t = Math.random();
+      colors[i * 3] = 0.4 + t * 0.3;     // R
+      colors[i * 3 + 1] = 0.2 + t * 0.3; // G  
+      colors[i * 3 + 2] = 0.9;            // B
+    }
+    
+    // Nodes geometry
+    const nodeGeometry = new THREE.BufferGeometry();
+    nodeGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    nodeGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    
+    const nodeMaterial = new THREE.PointsMaterial({
+      size: isMobile ? 0.1 : 0.08,
+      map: texture,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      vertexColors: true
+    });
+    
+    nodes = new THREE.Points(nodeGeometry, nodeMaterial);
+    scene.add(nodes);
+    
+    // Create connections between nearby nodes
+    const linePositions = [];
+    const lineColors = [];
+    const maxDist = 1.3;
+    
+    for (let i = 0; i < nodeCount; i++) {
+      for (let j = i + 1; j < nodeCount; j++) {
+        const dx = positions[i * 3] - positions[j * 3];
+        const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+        const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
         
-        function copiarTextoFallback(targetElement, textToCopy, isTableCell) {
-             const textArea = document.createElement("textarea");
-             textArea.value = textToCopy;
-             textArea.style.position = "fixed"; 
-             textArea.style.opacity = "0"; 
-             document.body.appendChild(textArea);
-             textArea.focus();
-             textArea.select();
-             try {
-                 document.execCommand('copy');
-                 mostrarNotificacion(targetElement, '✅ Copiado!', isTableCell);
-             } catch (err) {
-                 alert('Error al copiar. Por favor, copie manualmente: ' + textToCopy);
-             }
-             document.body.removeChild(textArea);
+        if (dist < maxDist) {
+          const opacity = (1 - dist / maxDist) * 0.5;
+          linePositions.push(
+            positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2],
+            positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]
+          );
+          lineColors.push(
+            0.5 * opacity, 0.3 * opacity, 0.9 * opacity,
+            0.3 * opacity, 0.4 * opacity, 0.9 * opacity
+          );
         }
-
-        function mostrarNotificacion(targetElement, message, isTableCell) {
-            let button;
-            let originalText;
-
-            if (isTableCell) {
-                button = targetElement;
-                originalText = button.textContent;
-                originalBg = getComputedStyle(button).backgroundColor;
-                
-                button.textContent = message;
-                button.style.backgroundColor = var_success_color;
-
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.backgroundColor = originalBg; 
-                }, 1500);
-            } else {
-                button = targetElement.nextElementSibling;
-                if (!button || !button.classList.contains('copy-button')) {
-                    if (targetElement.id === 'codigo-med-result') {
-                       // Si es el resultado del medicamento, el botón es el siguiente hermano.
-                       button = targetElement.closest('.info-item').querySelector('.copy-button');
-                    } else if (targetElement.id === 'generated-ids-copia-manual') {
-                       button = document.getElementById('copyAllIdsButton');
-                    } else {
-                        return;
-                    }
-                }
-                
-                originalText = button.textContent;
-                
-                let restoreColor = var_primary_color;
-                if (targetElement.id === 'accion') {
-                    restoreColor = var_danger_color;
-                } else if (targetElement.id === 'generated-ids-copia-manual') {
-                    restoreColor = var_success_color;
-                } else if (targetElement.id === 'codigo-med-result') {
-                    restoreColor = var_danger_color;
-                }
-
-                button.textContent = message;
-                button.style.backgroundColor = var_success_color;
-                
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.backgroundColor = restoreColor;
-                }, 1500);
-            }
+      }
+    }
+    
+    const lineGeometry = new THREE.BufferGeometry();
+    lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+    lineGeometry.setAttribute('color', new THREE.Float32BufferAttribute(lineColors, 3));
+    
+    const lineMaterial = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    
+    lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+    scene.add(lines);
+    
+    // Add some larger glowing nodes
+    const glowCount = isMobile ? 5 : 8;
+    const glowPositions = new Float32Array(glowCount * 3);
+    for (let i = 0; i < glowCount; i++) {
+      const idx = Math.floor(Math.random() * nodeCount);
+      glowPositions[i * 3] = positions[idx * 3];
+      glowPositions[i * 3 + 1] = positions[idx * 3 + 1];
+      glowPositions[i * 3 + 2] = positions[idx * 3 + 2];
+    }
+    
+    const glowGeometry = new THREE.BufferGeometry();
+    glowGeometry.setAttribute('position', new THREE.BufferAttribute(glowPositions, 3));
+    
+    const glowMaterial = new THREE.PointsMaterial({
+      size: 0.2,
+      map: texture,
+      transparent: true,
+      opacity: 1,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      color: 0xa855f7
+    });
+    
+    const glowNodes = new THREE.Points(glowGeometry, glowMaterial);
+    scene.add(glowNodes);
+    
+    // Mouse interaction
+    if (!isMobile && hasHover) {
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+    }
+    
+    // Intersection observer to pause when not visible
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animationId) {
+          animate();
+        } else if (!isVisible && animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
         }
+      });
+    }, { threshold: 0 });
+    
+    observer.observe(canvas);
+    
+    // Resize
+    window.addEventListener('resize', onResize);
+  }
+  
+  function onResize() {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+  }
+  
+  function animate() {
+    if (!isVisible) return;
+    animationId = requestAnimationFrame(animate);
+    
+    const time = performance.now() * 0.0001;
+    
+    // Smooth mouse follow
+    targetRotX += (mouseY * 0.3 - targetRotX) * 0.04;
+    targetRotY += (mouseX * 0.3 - targetRotY) * 0.04;
+    
+    // Auto rotation + mouse influence
+    nodes.rotation.x = targetRotX + Math.sin(time) * 0.1;
+    nodes.rotation.y = targetRotY + time * 0.5;
+    lines.rotation.x = nodes.rotation.x;
+    lines.rotation.y = nodes.rotation.y;
+    
+    // Subtle pulsing
+    const pulse = 1 + Math.sin(performance.now() * 0.001) * 0.05;
+    nodes.scale.setScalar(pulse);
+    lines.scale.setScalar(pulse);
+    
+    renderer.render(scene, camera);
+  }
+  
+  try {
+    init();
+  } catch (e) {
+    console.warn('Three.js initialization failed:', e);
+    canvas.style.display = 'none';
+  }
+}
 
-        // ----------------------------------------------------
-        // --- Generador de Tabla y Gestión de Tareas ---
-        // ----------------------------------------------------
+// ===== INITIALIZE EVERYTHING =====
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+  
+  if (!prefersReducedMotion) {
+    initHero3D();
+  }
+  
+  // Small delay to ensure DOM is ready
+  setTimeout(() => {
+    initTextReveal();
+    initSectionReveals();
+    initProcessTimeline();
+    ScrollTrigger.refresh();
+  }, 100);
+});
 
-        function generarTablaPersonalizada() {
-            const inputElement = document.getElementById('dataInput');
-            const rawText = inputElement.value.trim();
-            listaDeTareas = [];
+// Refresh ScrollTrigger on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 250);
+});
 
-            if (!rawText) {
-                renderizarTabla();
-                return;
-            }
+</script>
 
-            const lines = rawText.split('\n').filter(line => line.trim() !== '');
-            
-            lines.forEach(line => {
-                const cells = line.trim().split(/\s{1,}/);
-                
-                if (cells.length >= 8) {
-                    listaDeTareas.push({
-                        estatus: cells[0],
-                        tipo: cells[1],
-                        id: cells[2],
-                        codSuministro: cells[3],
-                        valor: cells[4],
-                        ahorro: cells[5],
-                        eps: cells[6],
-                        num: cells[7]
-                    });
-                }
-            });
-
-            renderizarTabla();
-            guardarDatos(); 
-        }
-
-        function renderizarTabla() {
-            const outputDiv = document.getElementById('dynamicTableOutput');
-            const radicadoInput = document.getElementById('radicado');
-            const copyAllIdsContainer = document.getElementById('copyAllIdsContainer');
-            const copyAllIdsSpan = document.getElementById('generated-ids-copia-manual');
-            
-            outputDiv.innerHTML = '';
-            copyAllIdsContainer.style.display = 'none';
-
-            if (listaDeTareas.length === 0) {
-                outputDiv.innerHTML = '<p style="text-align: center; color: var(--secondary-color); padding: 10px; border: 1px dashed #ccc; border-radius: 5px;"><i class="fas fa-check-circle"></i> Todas las tareas han sido completadas o no hay datos cargados.</p>';
-                radicadoInput.value = '';
-                return;
-            }
-
-            let tableHTML = `
-                <div class="excel-table-container">
-                    <table class="excel-table">
-                        <thead>
-                            <tr>
-                                <th>Estatus</th>
-                                <th>Tipo</th>
-                                <th>ID Liquidación</th>
-                                <th>Cód. Suministro</th>
-                                <th>Valor</th>
-                                <th>Ahorro</th>
-                                <th>EPS</th>
-                                <th>Num</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            let allIds = [];
-            const tareasRestantes = listaDeTareas.length;
-            
-            listaDeTareas.forEach((tarea, index) => {
-                allIds.push(tarea.id);
-                
-                tableHTML += `
-                    <tr id="tarea-row-${index}">
-                        <td>${tarea.estatus}</td>
-                        <td>${tarea.tipo}</td>
-                        <td class="cell-copy" onclick="copiarTextoTabla(this)">${tarea.id}</td>
-                        <td>${tarea.codSuministro}</td>
-                        <td>${tarea.valor}</td>
-                        <td>${tarea.ahorro}</td>
-                        <td>${tarea.eps}</td>
-                        <td>${tarea.num}</td>
-                        <td style="text-align: center;">
-                            <button class="complete-row-button" onclick="mostrarComentario(${index})"><i class="fas fa-archive"></i> Archivar</button>
-                            <div id="comment-box-${index}" class="comment-container">
-                                <span class="comment-counter">Tareas: 1</span>
-                                <textarea id="comment-text-${index}" placeholder="Escribe tu comentario..."></textarea>
-                                <button class="save-comment-button" onclick="marcarCompletado(${index})"><i class="fas fa-save"></i> Guardar Comentario</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            tableHTML += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            outputDiv.innerHTML = tableHTML;
-            
-            radicadoInput.value = listaDeTareas[0].id; 
-            copyAllIdsSpan.textContent = allIds.join(', ');
-            copyAllIdsContainer.style.display = 'flex';
-        }
-
-        function mostrarComentario(index) {
-            const commentBox = document.getElementById(`comment-box-${index}`);
-            document.querySelectorAll('.comment-container').forEach(box => {
-                if (box.id !== `comment-box-${index}`) {
-                    box.style.display = 'none';
-                }
-            });
-            commentBox.style.display = commentBox.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function marcarCompletado(index) {
-            const commentText = document.getElementById(`comment-text-${index}`).value.trim();
-            
-            const tareaCompletada = listaDeTareas[index];
-            tareaCompletada.comentario = commentText || 'Sin comentario';
-            tareaCompletada.fecha = new Date().toLocaleString();
-            tareaCompletada.historialIndex = listaDeHistorial.length; 
-
-            listaDeHistorial.push(tareaCompletada);
-            
-            listaDeTareas.splice(index, 1);
-            
-            actualizarTextareaConLista();
-            renderizarTabla();
-            renderizarHistorial(false); 
-            guardarDatos(); 
-
-            alert(`Tarea ${tareaCompletada.id} archivada con éxito. Total en historial: ${listaDeHistorial.length}`);
-        }
-
-        function actualizarTextareaConLista() {
-            const inputElement = document.getElementById('dataInput');
-            let newText = '';
-            
-            listaDeTareas.forEach(tarea => {
-                newText += `${tarea.estatus} ${tarea.tipo} ${tarea.id} ${tarea.codSuministro} ${tarea.valor} ${tarea.ahorro} ${tarea.eps} ${tarea.num}\n`;
-            });
-            
-            inputElement.value = newText.trim();
-        }
-        
-        // ----------------------------------------------------
-        // --- Gestión de Historial (Archivado) ---
-        // ----------------------------------------------------
-        
-        function renderizarHistorial(forceShow) {
-            const historyOutput = document.getElementById('historyTableContainer');
-            const historyContent = document.getElementById('historyOutput');
-            
-            if (listaDeHistorial.length === 0) {
-                 historyOutput.innerHTML = '<p style="color: var(--secondary-color); text-align: center; padding: 10px; border: 1px dashed #ccc; border-radius: 5px;"><i class="fas fa-info-circle"></i> El historial está vacío.</p>';
-                 return;
-            }
-
-            let tableHTML = `
-                <div class="excel-table-container">
-                    <table class="excel-table history-table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-calendar-alt"></i> Fecha/Hora</th>
-                                <th>ID Liquidación</th>
-                                <th>EPS</th>
-                                <th>Valor</th>
-                                <th style="min-width: 350px;"><i class="fas fa-comment"></i> Comentario</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            listaDeHistorial.slice().reverse().forEach((tarea, indexReversed) => { 
-                const originalIndex = listaDeHistorial.length - 1 - indexReversed;
-
-                tableHTML += `
-                    <tr>
-                        <td>${tarea.fecha}</td>
-                        <td class="cell-copy" onclick="copiarTextoTabla(this)">${tarea.id}</td>
-                        <td>${tarea.eps}</td>
-                        <td>${tarea.valor}</td>
-                        <td id="comment-display-${originalIndex}">${tarea.comentario}</td>
-                        <td>
-                            <button class="edit-comment-button" onclick="iniciarEdicionComentario(${originalIndex}, this)"><i class="fas fa-edit"></i> Editar</button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            tableHTML += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            historyOutput.innerHTML = tableHTML;
-            
-            if (forceShow) {
-                historyContent.style.display = 'block';
-                document.getElementById('historySection').querySelector('.section-header button').innerHTML = '<i class="fas fa-angle-up"></i> Ver Menos';
-            }
-        }
-
-        function mostrarHistorial() {
-            renderizarHistorial(true); 
-        }
-
-        function eliminarHistorialCompleto() {
-            if (confirm("¿Estás seguro de que quieres ELIMINAR TODO el historial de tareas completadas? Esta acción es irreversible.")) {
-                listaDeHistorial = [];
-                renderizarHistorial(false);
-                guardarDatos();
-                alert("Historial eliminado con éxito.");
-            }
-        }
-        
-        function iniciarEdicionComentario(index, buttonElement) {
-            const commentCell = document.getElementById(`comment-display-${index}`);
-            const tarea = listaDeHistorial[index];
-            const originalComment = tarea.comentario;
-            
-            commentCell.innerHTML = `
-                <textarea id="edit-text-${index}" style="width: 100%; height: 60px; margin-bottom: 5px;">${originalComment}</textarea>
-                <button class="save-comment-button" onclick="guardarComentarioEditado(${index})"><i class="fas fa-save"></i> Guardar</button>
-                <button class="copy-button" style="background-color: #f0ad4e; margin-left: 5px;" onclick="cancelarEdicionComentario(${index}, '${originalComment}')"><i class="fas fa-times"></i> Cancelar</button>
-            `;
-            
-            buttonElement.disabled = true;
-            buttonElement.style.opacity = 0.5;
-        }
-
-        function guardarComentarioEditado(index) {
-            const newComment = document.getElementById(`edit-text-${index}`).value.trim();
-            
-            listaDeHistorial[index].comentario = newComment;
-            
-            renderizarHistorial(true);
-            guardarDatos();
-        }
-
-        function cancelarEdicionComentario(index, originalComment) {
-            const commentCell = document.getElementById(`comment-display-${index}`);
-            commentCell.innerHTML = originalComment;
-            
-            const editButton = commentCell.closest('tr').querySelector('.edit-comment-button');
-            if (editButton) {
-                editButton.disabled = false;
-                editButton.style.opacity = 1;
-            }
-        }
-        
-        // ----------------------------------------------------
-        // --- Utilidades de Interfaz ---
-        // ----------------------------------------------------
-
-        function toggleSection(contentId, buttonElement) {
-            const content = document.getElementById(contentId);
-            
-            if (content.style.display === 'none' || content.style.display === '') {
-                content.style.display = 'block';
-                buttonElement.innerHTML = '<i class="fas fa-angle-up"></i> Ver Menos';
-            } else {
-                content.style.display = 'none';
-                buttonElement.innerHTML = '<i class="fas fa-angle-down"></i> Ver Más';
-            }
-        }
-
-
-        // --- Base de Datos de Medicamentos y Buscador CORREGIDO ---
-        const medicamentos = { 
-            "AMLODIPINO TABLETAS 5MG": "MD000150",
-            "ACIDO ACETILSALICILICO 100 MG": "MD004978",
-            "LOSARTAN TABLETA 50MG": "MD000161",
-            "HIDROCLOROTIAZIDA TABLETA 25 MG": "MD000134",
-            "METOPROLOL TABLETA 50 MG": "MD000145",
-            "ATORVASTATINA TABLETA 40MG": "MD001258",
-            "PRAZOSIN TABLETA 1 MG": "MD000132",
-            "METFORMINA TABLETA 850 MG": "MD000032",
-            "NAPROXENO TABLETA 250 MG": "MD000402",
-            "PROPRANOLOL TABLETA 40 MG": "MD000148",
-            "IBUPROFENO TABLETA 400 MG": "MD000300",
-            "OMEPRAZOL CAPSULA 20 MG": "MD000200",
-            "CLOPIDOGREL TABLETA 75 MG": "MD000555",
-            "SIMVASTATINA TABLETA 20 MG": "MD000188"
-        };
-        
-        function buscarMedicamento() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toUpperCase().trim();
-            const resultDiv = document.getElementById('searchResult');
-            resultDiv.innerHTML = ''; 
-            
-            // Límite CORREGIDO: Se activa con solo 1 letra
-            if (filter.length < 1) { 
-                resultDiv.innerHTML = '<span style="color: var(--secondary-color);">Escriba al menos 1 letra para iniciar la búsqueda.</span>';
-                return;
-            }
-
-            let found = false;
-            let resultsHTML = '';
-            
-            // Recorrer todos los medicamentos y buscar coincidencias
-            for (const nombre in medicamentos) {
-                if (nombre.toUpperCase().includes(filter)) {
-                    const codigo = medicamentos[nombre];
-                    const codigoId = `codigo-med-result-${codigo}`; // ID único para cada resultado
-                    
-                    resultsHTML += `
-                        <div class="info-item" style="border-bottom: none;">
-                            <strong style="color: #000; min-width: auto; flex-basis: 50%;">${nombre}</strong>
-                            <span id="${codigoId}" class="copy-target" style="flex-grow: 0; background-color: #ffe0e0;">${codigo}</span>
-                            <button class="copy-button" onclick="copiarTexto('${codigoId}')" style="background-color: var(--danger-color);"><i class="fas fa-copy"></i> Copiar Código</button>
-                        </div>
-                    `;
-                    found = true;
-                }
-            }
-
-            if (found) {
-                 resultDiv.innerHTML = resultsHTML;
-            } else {
-                resultDiv.innerHTML = '<span style="color: var(--secondary-color);">❌ No se encontró el medicamento.</span>';
-            }
-        }
-
-        // --- Inicialización al cargar la página ---
-        window.onload = function() {
-            cargarDatos();
-            document.getElementById('historyOutput').style.display = 'none';
-            document.getElementById('accesos-credenciales-content').style.display = 'none';
-            
-            document.getElementById('historySection').querySelector('.section-header button').innerHTML = '<i class="fas fa-angle-down"></i> Ver Más';
-            document.getElementById('accesos-credenciales-section').querySelector('.section-header button').innerHTML = '<i class="fas fa-angle-down"></i> Ver Más';
-        };
-    </script>
 </body>
 </html>
